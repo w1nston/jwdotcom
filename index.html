@@ -19,14 +19,123 @@
     <div class="row">
       <div class="col s12 m12 l8">
         <section class="main-content">
-          <article>
+          <article class="main-content__article">
             <h1>Continuous Delivery Pipeline - Take one</h1>
             <p>
               So this is my attempt at creating a continuous delivery pipeline.
               First it seems like a good idea to just deliver something to a
               server manually to get a feel for what needs to be done,
-              and what steps can be automated...
+              and what steps can be automated.
             </p>
+            <h2>The project structure</h2>
+            <p>
+              The focus is on the delivery pipeline, not on the content. In other words, no worries
+              about what library to chose, how to configure webpack, or what color to use on the
+              headlines. It is actually really difficult to let go of all that. But need to move
+              forward!
+            </p>
+            <p>
+              So, the structure consists of an index.html file that actually is the page, as well as
+              a public directory containing any assets. The assets for the time being are one simple
+              stylesheet and a svg image.
+            </p>
+            <pre>
+              <code>
+                |-rootDirectory
+                | |-public
+                | | |-assets
+                | | | |-images
+                | | | | |-logo.svg
+                | | | |-styles
+                | | | | |-style.css
+                | |-index.html
+              </code>
+            </pre>
+            <p>
+              The project is checked in at
+              <a
+                target="_blank"
+                href="https://github.com/w1nston/jwdotcom"
+              >Github</a>.
+            </p>
+            <h2>The server structure</h2>
+            <p>
+              The server is running on a virtual private server (VPS), setup with Ubuntu 14.04 LTS.
+              Following the guides on
+              <a
+                target="_blank"
+                href="https://www.linode.com/docs/security/securing-your-server"
+              >Linode</a>, and in the home
+              directory the project is cloned from Github. I then copied the index.html and the
+              public directory to
+              <code class="bash">
+                /srv/www/example.com/(date)/
+              </code>
+            </p>
+            <p>
+              To serve the content I use
+              <a
+                target="_blank"
+                href="https://nginx.org/en/"
+              >nginx</a>, and am pointing the root location to
+              <code class="bash">
+                /srv/www/example.com/latest
+              </code>, where the <i>latest</i>-directory is simply a symbolic link pointing to
+              another
+              sibling directory named with a date. This makes it easy to point to a new release
+              once available. E.g:
+            <ul>
+              <li><code>20160810/</code></li>
+              <li><code>20160917/</code></li>
+              <li><code>latest -> 20160917/</code></li>
+            </ul>
+            </p>
+            <h2>Reflections</h2>
+            <p>
+              I have a first version of a pipeline, maybe not much of a continuous delivery
+              pipeline just yet, but lets see what we got.
+            </p>
+            <p>
+              With this approach the pipeline looks like follows. I do a change in the source,
+              push it to the origin repository. Manually login to the VPS, pull the
+              new changes, copy them to a new directory, and name it with the current date. Oh,
+              wait! What about two or more releases during one day?
+            </p>
+            <p>
+              I clearly need to figure out a better way to deal with release versions, duly noted.
+              But lets move on...
+            </p>
+            <p>
+              Once the files are copied over to the versioned release directory and we feel lucky.
+              A new symlink needs to be created, and it should of course point to the most recent
+              release version.
+            </p>
+            <p>
+              So, a lot of manual steps, but that's what's to be expected since the goal was to
+              just get anything working. It is easier to improve something than it is to create
+              something perfect from the beginning.
+            </p>
+            <h2>Improvement points</h2>
+            <p>
+              So, what can be improved? Initially I see two points to improve: release versioning,
+              and number of manual steps.
+            </p>
+            <h3>Release versioning</h3>
+            <p>
+              <code>// TODO</code>
+            </p>
+            <h3>Number of manual steps</h3>
+            <p>
+              From <code>$ git push</code> there shouldn't be too many steps before a new release
+              can be tested, and finally deployed. With this pipeline there are at least five steps
+              before a new release sees the light of day.
+            </p>
+            <p>
+              One step to login to the VPS, one step to pull the updates from Github, one step to
+              copy the files to a new versioned release directory, one step to redirect the
+              <i>latest</i>-symlink, and lastly, one step to reload the nginx-server.
+            </p>
+            <code>// TODO ...</code>
           </article>
         </section>
       </div>
