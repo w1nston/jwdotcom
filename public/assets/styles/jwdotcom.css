@@ -1,0 +1,19 @@
+body {
+  font-family: 'Fira Sans', 'Helvetica Neue Light', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  color: #0042ff;
+  font-size: 1rem;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Montserrat', 'Helvetica Neue Light', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  font-size: 2rem;
+}
+
+.menu-content__logo {
+  width: 84px;
+  height: 84px;
+}
+
+.main-content {
+  padding: 1rem;
+}
