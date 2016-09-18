@@ -186,8 +186,25 @@
               </code>
             </pre>
             <p>
-              Let's do it!
+              Although, I found
+              <a
+                href="https://serversforhackers.com/video/automating-deployment-from-github"
+              >something interesting</a> that got me thinking about a different structure. At first
+              I've considered that I don't want to expose the entire repository from Github. Now
+              I start to think that maybe it's cleaner just to clone a new repository on every
+              release, and do the build step with the script as well.
             </p>
+            <p>
+              I am thinking that I'll try out the following instead, and simply skip the copying
+              step.
+            </p>
+            <pre>
+              <code class="bash">
+                /srv/www/example.com/releases/2016.09.17.1.0
+                /srv/www/example.com/releases/2016.09.18.1.0
+                /srv/www/example.com/latest -> /srv/www/example.com/releases/2016.09.18.1.0
+              </code>
+            </pre>
           </article>
         </section>
       </div>
