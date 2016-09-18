@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>JonasWallander</title>
     <meta charset="utf-8">
     <link href="https://fonts.googleapis.com/css?family=Fira+Sans|Montserrat"
           rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css"
-          rel="stylesheet">
+
+    <link
+      href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/tomorrow-night-blue.min.css"
+      rel="stylesheet">
+
     <link href="public/assets/styles/jwdotcom.css" rel="stylesheet">
-    <link href="vendor/assets/styles/tomorrow-night-blue.css"
-          rel="stylesheet">
+
   </head>
   <body>
     <div class="row">
@@ -42,7 +45,7 @@
               stylesheet and a svg image.
             </p>
             <pre>
-              <code>
+              <code class="bash">
                 |-rootDirectory
                 | |-public
                 | | |-assets
@@ -214,7 +217,9 @@
     <footer>
       <script
         src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
-      <script>hljs.initHighlightingOnLoad();</script>
+      <script>
+        hljs.initHighlightingOnLoad();
+      </script>
     </footer>
   </body>
 </html>
