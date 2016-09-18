@@ -7,6 +7,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css"
           rel="stylesheet">
     <link href="public/assets/styles/jwdotcom.css" rel="stylesheet">
+    <link href="vendor/assets/styles/tomorrow-night-blue.css"
+          rel="stylesheet">
   </head>
   <body>
     <div class="row">
@@ -68,9 +70,11 @@
               >Linode</a>, and in the home
               directory the project is cloned from Github. I then copied the index.html and the
               public directory to
-              <code class="bash">
-                /srv/www/example.com/(date)/
-              </code>
+              <pre>
+                <code class="bash">
+                  /srv/www/example.com/&ltdate&gt/
+                </code>
+              </pre>
             </p>
             <p>
               To serve the content I use
@@ -78,17 +82,22 @@
                 target="_blank"
                 href="https://nginx.org/en/"
               >nginx</a>, and am pointing the root location to
-              <code class="bash">
-                /srv/www/example.com/latest
-              </code>, where the <i>latest</i>-directory is simply a symbolic link pointing to
+              <pre>
+                <code class="bash">
+                  /srv/www/example.com/latest
+                </code>
+              </pre>
+              where the <i>latest</i>-directory is simply a symbolic link pointing to
               another
               sibling directory named with a date. This makes it easy to point to a new release
-              once available. E.g:
-            <ul>
-              <li><code>20160810/</code></li>
-              <li><code>20160917/</code></li>
-              <li><code>latest -> 20160917/</code></li>
-            </ul>
+              once available.
+            <pre>
+              <code class="bash">
+                20160810/
+                20160917/
+                latest -> 20160917/
+              </code>
+            </pre>
             </p>
             <h2>Reflections</h2>
             <p>
@@ -96,10 +105,10 @@
               pipeline just yet, but lets see what we got.
             </p>
             <p>
-              With this approach the pipeline looks like follows. I do a change in the source,
-              push it to the origin repository. Manually login to the VPS, pull the
-              new changes, copy them to a new directory, and name it with the current date. Oh,
-              wait! What about two or more releases during one day?
+              With this approach the pipeline looks like follows. I do a change in the source code,
+              push it to the origin repository. Manually login to the VPS, pull the new changes,
+              copy them to a new directory, and name it with the current date. Oh, wait! What about
+              two or more releases during one day?
             </p>
             <p>
               I clearly need to figure out a better way to deal with release versions, duly noted.
@@ -122,11 +131,30 @@
             </p>
             <h3>Release versioning</h3>
             <p>
-              <code>// TODO</code>
+              Okay, so just a date won't cut it. Lets play a little with something similar to
+              <a
+                href="http://semver.org/">
+                semver
+              </a>. The date part is not totally useless, but it needs a little more. Another type
+              of sequence to distinguish if it is the first, or second release of the day etc. Lets
+              play with the following format.
+            </p>
+            <pre>
+              <code class="bash">
+                &ltyear&gt.&ltmonth&gt.&ltday&gt.&ltversion&gt.&ltbugfix version&gt
+
+                // E.g.
+
+                2016.09.18.1.0
+              </code>
+            </pre>
+            <p>
+              Right now I can't really think of anything as to why not to try this versioning, so
+              I'll just go ahead and evaluate it for now.
             </p>
             <h3>Number of manual steps</h3>
             <p>
-              From <code>$ git push</code> there shouldn't be too many steps before a new release
+              From the git push command there shouldn't be too many steps before a new release
               can be tested, and finally deployed. With this pipeline there are at least five steps
               before a new release sees the light of day.
             </p>
@@ -135,10 +163,39 @@
               copy the files to a new versioned release directory, one step to redirect the
               <i>latest</i>-symlink, and lastly, one step to reload the nginx-server.
             </p>
-            <code>// TODO ...</code>
+            <p>
+              So, what to do? I suppose it's time to try som shell scripting. Now what would I need
+              in form of a shell script then? Let's see, without changing anything but just automate
+              all steps a script could consist of something like the following.
+            </p>
+            <pre>
+              <code class="bash">
+                #!/usr/bin/env bash
+
+                # 1) Fetch latest source code from Github, perhaps by listening on git hooks
+                ...
+
+                # 2) Copy just the needed files to /srv/www/example.com/2016.09.18.1.0/
+                ...
+
+                # 3) Symlink the directory "latest" to the most recent release directory
+                ...
+
+                # 4) Restart nginx
+                ...
+              </code>
+            </pre>
+            <p>
+              Let's do it!
+            </p>
           </article>
         </section>
       </div>
     </div>
+    <footer>
+      <script
+        src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script>
+    </footer>
   </body>
 </html>

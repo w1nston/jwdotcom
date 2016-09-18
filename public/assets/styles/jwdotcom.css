@@ -21,6 +21,10 @@ h3 {
   font-size: 1.4rem;
 }
 
+pre code {
+  overflow: scroll;
+}
+
 .menu-content__logo {
   width: 84px;
   height: 84px;
