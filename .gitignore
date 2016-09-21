@@ -1,6 +1,12 @@
 # IntelliJ
 .idea
 
+# Npm
+node_modules
+
 # OSX
 .DS_Store
+
+# Logs
+*.log
 

@@ -1,46 +1,59 @@
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
 body {
   font-family: 'Fira Sans', 'Helvetica Neue Light', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
   background-color: rgba(242, 246, 208, 0.1);
-  color: rgba(0, 66, 255, 0.7);
-  font-size: 1rem;
+  color: #385f71;
+  font-size: 14px;
 }
 
 h1, h2, h3, h4 {
   font-family: 'Montserrat', 'Helvetica Neue Light', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
   color: #385f71;
-  text-align: left;
 }
 
-h1 {
-  font-size: 2rem;
+.navigation-container {
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
 }
 
-h2 {
-  font-size: 1.7rem;
+.navigation-container__jw-logo {
+  height: 5.25rem;
+  width: 5.25rem;
 }
 
-h3 {
-  font-size: 1.4rem;
+.navigation-container__nav > a {
+  margin-right: 12px;
 }
 
-pre code {
-  overflow: scroll;
+.main-content-container {
+  padding: 0 20px;
 }
 
-.menu-content__logo {
-  width: 84px;
-  height: 84px;
-}
-
-.main-content {
-  padding: 1rem;
-}
-
-.main-content__article {
-  max-width: 42rem;
+.main-content-container__blog {
   text-align: justify;
 }
 
-.hljs {
-  background: rgba(0, 36, 81, 0.9);
+p > a, b > a {
+  margin: 0 .25rem;
+}
+
+/* For desktop */
+@media only screen and (min-width: 768px){
+  .main-content-container__blog {
+    width: 60%;
+    margin: 0 auto;
+  }
+
+  .main-content-container__home {
+    width: 60%;
+    margin: 0 auto;
+  }
 }
