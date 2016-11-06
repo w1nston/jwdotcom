@@ -165,15 +165,17 @@ ln -nfs $RELEASE_DIR/$RELEASE $BASE_DIR"/latest";`
           content, and then return a new file with browser compatible ES5 syntax for the bundle.
         </p>
         <p>
-          Below is slimmed version of the webpack.config used for this site.
+          Below is the webpack.config used for this site.
         </p>
         <Highlight className="js">
           {`const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
+  devtool: 'cheap-module-eval-source-map',
   entry: [
     'babel-polyfill',
+    'webpack-hot-middleware/client',
     './app/index'
   ],
   output: {
@@ -181,12 +183,17 @@ module.exports = {
     filename: 'index.js',
     publicPath: 'public/assets/javascript/'
   },
-  plugins: [new webpack.optimize.OccurenceOrderPlugin()],
+  plugins: [
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.HotModuleReplacementPlugin()
+  ],
   module: {
     loaders: [
       {
         loader: 'babel-loader',
-        include: [path.resolve(__dirname, 'app')],
+        include: [
+          path.resolve(__dirname, 'app'),
+        ],
         exclude: /node_modules/,
         test: /\.js/,
         query: {
@@ -221,7 +228,11 @@ module.exports = {
         </p>
         <p>
           The idea is to add a ".travis.yml" file to instruct Travis to perform a set of tasks.
-          The tasks I want to add are to perform an "npm install", running the tests, running
+          The tasks I want to add are to perform an "npm install", through
+          <a
+            href="https://yarnpkg.com/"
+            target="_blank"
+          >yarn</a>, running the tests, running
           <a
             href="http://eslint.org/"
             target="_blank"
@@ -246,12 +257,77 @@ cache:
 script:
   - yarn run lint
   - yarn run test
-  - yarn run build
 `}
         </Highlight>
         <p>
-          Note: Am currently trying the above travis file, will update when making progress...
+          After
+          <a
+            href="https://docs.travis-ci.com/user/getting-started/"
+            target="_blank"
+          >setting up Travis</a> and pushing the .travis.yml file to Github, a step is still
+          missing. The JavaScript bundle is not built. I am not sure right now how to make it so
+          that the bundle is built and pushed somewhere, so for now I will just make it simple and
+          build it on the server when the build is passing. It is time to move forward and later
+          refactor, at least TravisCI is at place continuously running eslint and tests on every
+          git push!
         </p>
+        <h4>deploy.sh</h4>
+        <p>
+          Now there are a lot of unnecessary files added to the repository, that are not really
+          needed for the site to function. That means that the deploy.sh script has to be updated
+          to account for the new situation.
+        </p>
+        <p>
+          But first, install yarn in the same way as it is done for TravisCI...
+        </p>
+        <p>
+          ...and then find some issues. webpack needs a production build configuration. In my case
+          I use the hot module replacement to get hot reloading for the react components, and since
+          the same config was used to build the bundle for production as the one used with
+          webpack-dev-server things got weird.
+        </p>
+        <h4>Webpack revised</h4>
+        <p>
+          I am creating a webpack.production.config.js file at first, to see if this will work.
+          The content of it resembles the development config, and will be a good candidate to
+          extract some common config file, however, for now it will have to live in its own file.
+        </p>
+        <Highlight className="js">
+          {`const path = require('path');
+const webpack = require('webpack');
+
+module.exports = {
+  entry: [
+    'babel-polyfill',
+    './app/index'
+  ],
+  output: {
+    path: path.resolve(__dirname, 'public/assets/javascript'),
+    filename: 'index.js',
+    publicPath: 'public/assets/javascript/'
+  },
+  plugins: [
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.optimize.UglifyJsPlugin()
+  ],
+  module: {
+    loaders: [
+      {
+        loader: 'babel-loader',
+        include: [
+          path.resolve(__dirname, 'app'),
+        ],
+        exclude: /node_modules/,
+        test: /\.js/,
+        query: {
+          plugins: ['transform-runtime'],
+          presets: ['es2015', 'react']
+        }
+      }
+    ]
+  }
+};`}
+        </Highlight>
       </article>
       <article>
         <h2>Continuous Delivery Pipeline - Take one</h2>
