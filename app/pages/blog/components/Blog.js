@@ -230,11 +230,12 @@ module.exports = {
         </p>
         <Highlight className="yaml">
           {`language: node_js
-sudo: false
+node_js:
+  - "6"
 script:
-  - npm run lint
-  - npm run test
-  - npm run build
+  - "npm run lint"
+  - "npm run test"
+  - "npm run build"
 `}
         </Highlight>
         <p>
