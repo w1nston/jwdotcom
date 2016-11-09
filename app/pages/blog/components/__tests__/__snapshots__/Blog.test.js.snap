@@ -10,7 +10,7 @@ ShallowWrapper {
     className="main-content-container__blog">
     <article>
         <h2>
-            Continuous Delivery Pipeline - Take two
+            Continuous Delivery Pipeline - Take two (2016-11-09)
         </h2>
         <p>
             Last time the improvement points were to set a better version number, and to decrease the amount of manual steps. To fix that I put together the script deploy.sh described below.
@@ -81,15 +81,12 @@ ShallowWrapper {
             The new project structure
         </h3>
         <p>
-            Now it is time to increase the complexity a bit, lets add a build step. For the heck of it is time to add some 
-             
+            Now it is time to increase the complexity a bit, lets add a build step. For the heck of it is time to add some
             <a
                 href="https://facebook.github.io/react/"
                 target="_blank">
                 React
             </a>
-             
-             
             <a
                 href="https://react-router.now.sh/"
                 target="_blank">
@@ -98,17 +95,13 @@ ShallowWrapper {
              to the mix.
         </p>
         <p>
-            So in order to add React and stuff, I want to add a nice structure for the JavaScript to live in. This structure is then supposed to be built into compliant JavaScript code using 
-             
+            So in order to add React and stuff, I want to add a nice structure for the JavaScript to live in. This structure is then supposed to be built into compliant JavaScript code using
             <a
                 href="https://webpack.github.io/"
                 target="_blank">
                 webpack
             </a>
-             
-             
-            and 
-             
+            and
             <a
                 href="https://babeljs.io/"
                 target="_blank">
@@ -186,27 +179,545 @@ ShallowWrapper {
             The build step
         </h3>
         <p>
-            Since I am using React and ES6 I am also using babel to 
-             
+            Since I am using React and ES6 I am also using babel to
             <a
                 href="https://en.wikipedia.org/wiki/Source-to-source_compiler"
                 target="_blank">
                 transpile
             </a>
-             
-             
-            the JavaScript to ES5 so that the browser can understand it. This is my build step, transpiling the JavaScript and create an artifact to be used in \"production\".
+            the JavaScript to ES5 so that the browser can understand it. This will be the build step that I want to automate.
         </p>
         <h4>
             Enter webpack
         </h4>
         <p>
-            ...
+            Webpack is a module bundler, it says so on the
+            <a
+                href="http://webpack.github.io/docs/what-is-webpack.html"
+                target="_blank">
+                webpage
+            </a>
+            , and I will use it to specify the JavaScript bundle I want to build for my webpage. Its configuration lives in a file (
+            <b>
+                webpack.config.js
+            </b>
+            ) in the root directory, and the points of interest are the 
+            <b>
+                entry
+            </b>
+            , 
+            <b>
+                output
+            </b>
+            , 
+            <b>
+                plugins
+            </b>
+            , and
+            <b>
+                loaders
+            </b>
+             properties.
+        </p>
+        <p>
+            <b>
+                The
+                <a
+                    href="https://webpack.github.io/docs/configuration.html#entry"
+                    target="_blank">
+                    entry
+                </a>
+            </b>
+             property specifies the file(s) that are to be loaded as entry point for the bundle.
+        </p>
+        <p>
+            <b>
+                The
+                <a
+                    href="https://webpack.github.io/docs/configuration.html#output"
+                    target="_blank">
+                    output
+                </a>
+            </b>
+             property specifies how webpack should write the bundle output file.
+        </p>
+        <p>
+            <b>
+                The
+                <a
+                    href="https://webpack.github.io/docs/configuration.html#plugins"
+                    target="_blank">
+                    plugins
+                </a>
+            </b>
+             property specifies plugins to be used in order to work on the bundle. For instance to uglify/minify the bundle.
+            <a
+                href="http://webpack.github.io/docs/using-plugins.html"
+                target="_blank"
+                title="Webpack using plugins">
+                [*]
+            </a>
+        </p>
+        <p>
+            <b>
+                The
+                <a
+                    href="https://webpack.github.io/docs/configuration.html#module-loaders"
+                    target="_blank">
+                    loaders
+                </a>
+            </b>
+             property specifies loaders to transform files. A loader is basically a function that takes a resource/file as input, performs a transformation of the content of that file, and finally returns a new file to be used in the bundle.
+            <a
+                href="http://webpack.github.io/docs/using-loaders.html"
+                target="_blank"
+                title="Webpack using loaders">
+                [*]
+            </a>
+            For example taking an input file written with ES6 syntax, using babel to transpile the content, and then return a new file with browser compatible ES5 syntax for the bundle.
+        </p>
+        <p>
+            Below is the webpack.config used for this site.
+        </p>
+        <Highlight
+            className="js"
+            element={null}
+            innerHTML={false}>
+            const path = require(\'path\');
+            const webpack = require(\'webpack\');
+            
+            module.exports = {
+              devtool: \'cheap-module-eval-source-map\',
+              entry: [
+                \'babel-polyfill\',
+                \'webpack-hot-middleware/client\',
+                \'./app/index\'
+              ],
+              output: {
+                path: path.resolve(__dirname, \'public/assets/javascript\'),
+                filename: \'index.js\',
+                publicPath: \'public/assets/javascript/\'
+              },
+              plugins: [
+                new webpack.optimize.OccurenceOrderPlugin(),
+                new webpack.HotModuleReplacementPlugin()
+              ],
+              module: {
+                loaders: [
+                  {
+                    loader: \'babel-loader\',
+                    include: [
+                      path.resolve(__dirname, \'app\'),
+                    ],
+                    exclude: /node_modules/,
+                    test: /.js/,
+                    query: {
+                      plugins: [\'transform-runtime\'],
+                      presets: [\'es2015\', \'react\']
+                    }
+                  }
+                ]
+              }
+            };
+        </function (props, context, updater) {
+              // This constructor gets overridden by mocks. The argument is used
+              // by mocks to assert on what gets mounted.
+        
+              if (process.env.NODE_ENV !== 'production') {
+                process.env.NODE_ENV !== 'production' ? warning(this instanceof Constructor, 'Something is calling a React component directly. Use a factory or ' + 'JSX instead. See: https://fb.me/react-legacyfactory') : void 0;
+              }
+        
+              // Wire up auto-binding
+              if (this.__reactAutoBindPairs.length) {
+                bindAutoBindMethods(this);
+              }
+        
+              this.props = props;
+              this.context = context;
+              this.refs = emptyObject;
+              this.updater = updater || ReactNoopUpdateQueue;
+        
+              this.state = null;
+        
+              // ReactClasses doesn't have constructors. Instead, they use the
+              // getInitialState and componentWillMount methods for initialization.
+        
+              var initialState = this.getInitialState ? this.getInitialState() : null;
+              if (process.env.NODE_ENV !== 'production') {
+                // We allow auto-mocks to proceed as if they're returning null.
+                if (initialState === undefined && this.getInitialState._isMockFunction) {
+                  // This is probably bad practice. Consider warning here and
+                  // deprecating this convenience.
+                  initialState = null;
+                }
+              }
+              !(typeof initialState === 'object' && !Array.isArray(initialState)) ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s.getInitialState(): must return an object or null', Constructor.displayName || 'ReactCompositeComponent') : _prodInvariant('82', Constructor.displayName || 'ReactCompositeComponent') : void 0;
+        
+              this.state = initialState;
+            }>
+        <p>
+            When the configuration is done, the bundle is created by running the command
+            <b>
+                webpack
+            </b>
+             from the root of the project.
+        </p>
+        <h4>
+            TravisCI
+        </h4>
+        <p>
+            <a
+                href="https://travis-ci.org"
+                target="_blank">
+                Travis CI
+            </a>
+            \"is a hosted
+            <a
+                href="http://www.martinfowler.com/articles/continuousIntegration.html"
+                target="_blank">
+                continuous integration
+            </a>
+             and deployment system\"
+            <a
+                href="https://github.com/travis-ci/travis-ci"
+                target="_blank"
+                title="TravisCI Readme">
+                [*]
+            </a>
+             that I will use since it is easy to use together with GitHub.
+        </p>
+        <p>
+            The idea is to add a \".travis.yml\" file to instruct Travis to perform a set of tasks. The tasks I want to add are to perform an \"npm install\", through
+            <a
+                href="https://yarnpkg.com/"
+                target="_blank">
+                yarn
+            </a>
+            , running the tests, running
+            <a
+                href="http://eslint.org/"
+                target="_blank">
+                eslint
+            </a>
+            , and if all passes, building the JavaScript to be used. Okay, let\'s go, .travis.yml!
+        </p>
+        <Highlight
+            className="yaml"
+            element={null}
+            innerHTML={false}>
+            language: node_js
+            node_js:
+              - \"6\"
+            before_install:
+              # Repo for newer Node.js versions
+              - curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+              # Repo for Yarn
+              - sudo apt-key adv --fetch-keys http://dl.yarnpkg.com/debian/pubkey.gpg
+              - echo \"deb http://dl.yarnpkg.com/debian/ stable main\" | sudo tee /etc/apt/sources.list.d/yarn.list
+              - sudo apt-get update -qq
+              - sudo apt-get install -y -qq yarn
+            cache:
+              directories:
+              - $HOME/.yarn-cache
+            script:
+              - yarn run lint
+              - yarn run test
+            
+        </function (props, context, updater) {
+              // This constructor gets overridden by mocks. The argument is used
+              // by mocks to assert on what gets mounted.
+        
+              if (process.env.NODE_ENV !== 'production') {
+                process.env.NODE_ENV !== 'production' ? warning(this instanceof Constructor, 'Something is calling a React component directly. Use a factory or ' + 'JSX instead. See: https://fb.me/react-legacyfactory') : void 0;
+              }
+        
+              // Wire up auto-binding
+              if (this.__reactAutoBindPairs.length) {
+                bindAutoBindMethods(this);
+              }
+        
+              this.props = props;
+              this.context = context;
+              this.refs = emptyObject;
+              this.updater = updater || ReactNoopUpdateQueue;
+        
+              this.state = null;
+        
+              // ReactClasses doesn't have constructors. Instead, they use the
+              // getInitialState and componentWillMount methods for initialization.
+        
+              var initialState = this.getInitialState ? this.getInitialState() : null;
+              if (process.env.NODE_ENV !== 'production') {
+                // We allow auto-mocks to proceed as if they're returning null.
+                if (initialState === undefined && this.getInitialState._isMockFunction) {
+                  // This is probably bad practice. Consider warning here and
+                  // deprecating this convenience.
+                  initialState = null;
+                }
+              }
+              !(typeof initialState === 'object' && !Array.isArray(initialState)) ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s.getInitialState(): must return an object or null', Constructor.displayName || 'ReactCompositeComponent') : _prodInvariant('82', Constructor.displayName || 'ReactCompositeComponent') : void 0;
+        
+              this.state = initialState;
+            }>
+        <p>
+            After
+            <a
+                href="https://docs.travis-ci.com/user/getting-started/"
+                target="_blank">
+                setting up Travis
+            </a>
+             and pushing the .travis.yml file to Github, a step is still missing. The JavaScript bundle is not built. I am not sure right now how to make it so that the bundle is built and pushed somewhere, so for now I will just make it simple and build it on the server when the build is passing. It is time to move forward and later refactor, at least TravisCI is at place continuously running eslint and tests on every git push!
+        </p>
+        <h4>
+            deploy.sh
+        </h4>
+        <p>
+            Now there are a lot of unnecessary files added to the repository, that are not really needed for the site to function. That means that the deploy.sh script has to be updated to account for the new situation.
+        </p>
+        <p>
+            But first, install yarn in the same way as it is done for TravisCI...
+        </p>
+        <p>
+            ...and then find some issues. webpack needs a production build configuration. In my case I use the hot module replacement to get hot reloading for the react components, and since the same config was used to build the bundle for production as the one used with webpack-dev-server things got weird.
+        </p>
+        <p>
+            It was also necessary to
+            <a
+                href="http://bit.ly/2fuIDVL"
+                target="_blank">
+                add a plugin for webpack
+            </a>
+             to get React built for production rather than a development environment.
+        </p>
+        <Highlight
+            className="js"
+            element={null}
+            innerHTML={false}>
+            new webpack.DefinePlugin({
+              \'process.env\': {
+                NODE_ENV: JSON.stringify(\'production\')
+              }
+            }),
+        </function (props, context, updater) {
+              // This constructor gets overridden by mocks. The argument is used
+              // by mocks to assert on what gets mounted.
+        
+              if (process.env.NODE_ENV !== 'production') {
+                process.env.NODE_ENV !== 'production' ? warning(this instanceof Constructor, 'Something is calling a React component directly. Use a factory or ' + 'JSX instead. See: https://fb.me/react-legacyfactory') : void 0;
+              }
+        
+              // Wire up auto-binding
+              if (this.__reactAutoBindPairs.length) {
+                bindAutoBindMethods(this);
+              }
+        
+              this.props = props;
+              this.context = context;
+              this.refs = emptyObject;
+              this.updater = updater || ReactNoopUpdateQueue;
+        
+              this.state = null;
+        
+              // ReactClasses doesn't have constructors. Instead, they use the
+              // getInitialState and componentWillMount methods for initialization.
+        
+              var initialState = this.getInitialState ? this.getInitialState() : null;
+              if (process.env.NODE_ENV !== 'production') {
+                // We allow auto-mocks to proceed as if they're returning null.
+                if (initialState === undefined && this.getInitialState._isMockFunction) {
+                  // This is probably bad practice. Consider warning here and
+                  // deprecating this convenience.
+                  initialState = null;
+                }
+              }
+              !(typeof initialState === 'object' && !Array.isArray(initialState)) ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s.getInitialState(): must return an object or null', Constructor.displayName || 'ReactCompositeComponent') : _prodInvariant('82', Constructor.displayName || 'ReactCompositeComponent') : void 0;
+        
+              this.state = initialState;
+            }>
+        <h4>
+            Webpack revised
+        </h4>
+        <p>
+            I am creating a webpack.production.config.js file at first, to see if this will work. The content of it resembles the development config, and will be a good candidate to extract some common config file, however, for now it will have to live in its own file.
+        </p>
+        <Highlight
+            className="js"
+            element={null}
+            innerHTML={false}>
+            const path = require(\'path\');
+            const webpack = require(\'webpack\');
+            
+            module.exports = {
+              entry: [
+                \'babel-polyfill\',
+                \'./app/index\'
+              ],
+              output: {
+                path: path.resolve(__dirname, \'public/assets/javascript\'),
+                filename: \'index.js\',
+                publicPath: \'public/assets/javascript/\'
+              },
+              plugins: [
+                new webpack.optimize.OccurenceOrderPlugin(),
+                new webpack.DefinePlugin({
+                  \'process.env\': {
+                    NODE_ENV: JSON.stringify(\'production\')
+                  }
+                }),
+                new webpack.optimize.UglifyJsPlugin()
+              ],
+              module: {
+                loaders: [
+                  {
+                    loader: \'babel-loader\',
+                    include: [
+                      path.resolve(__dirname, \'app\'),
+                    ],
+                    exclude: /node_modules/,
+                    test: /.js/,
+                    query: {
+                      plugins: [\'transform-runtime\'],
+                      presets: [\'es2015\', \'react\']
+                    }
+                  }
+                ]
+              }
+            };
+        </function (props, context, updater) {
+              // This constructor gets overridden by mocks. The argument is used
+              // by mocks to assert on what gets mounted.
+        
+              if (process.env.NODE_ENV !== 'production') {
+                process.env.NODE_ENV !== 'production' ? warning(this instanceof Constructor, 'Something is calling a React component directly. Use a factory or ' + 'JSX instead. See: https://fb.me/react-legacyfactory') : void 0;
+              }
+        
+              // Wire up auto-binding
+              if (this.__reactAutoBindPairs.length) {
+                bindAutoBindMethods(this);
+              }
+        
+              this.props = props;
+              this.context = context;
+              this.refs = emptyObject;
+              this.updater = updater || ReactNoopUpdateQueue;
+        
+              this.state = null;
+        
+              // ReactClasses doesn't have constructors. Instead, they use the
+              // getInitialState and componentWillMount methods for initialization.
+        
+              var initialState = this.getInitialState ? this.getInitialState() : null;
+              if (process.env.NODE_ENV !== 'production') {
+                // We allow auto-mocks to proceed as if they're returning null.
+                if (initialState === undefined && this.getInitialState._isMockFunction) {
+                  // This is probably bad practice. Consider warning here and
+                  // deprecating this convenience.
+                  initialState = null;
+                }
+              }
+              !(typeof initialState === 'object' && !Array.isArray(initialState)) ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s.getInitialState(): must return an object or null', Constructor.displayName || 'ReactCompositeComponent') : _prodInvariant('82', Constructor.displayName || 'ReactCompositeComponent') : void 0;
+        
+              this.state = initialState;
+            }>
+        <h4>
+            deploy.sh revised
+        </h4>
+        <Highlight
+            className="bash"
+            element={null}
+            innerHTML={false}>
+            #!/usr/bin/env bash
+            
+            REPO=\"https://github.com/w1nston/jwdotcom.git\";
+            BASE_DIR=\"/srv/www/jonaswallander.com\";
+            BUILD_DIR=\"${BASE_DIR}/builds\";
+            RELEASE_DIR=\"${BASE_DIR}/releases\";
+            RELEASE=\"\`date +%Y\`.\`date +%m\`.\`date +%d\`.$1\";
+            
+            # Fetch source code
+            [ -d $BUILD_DIR ] || mkdir $BUILD_DIR;
+            cd $BUILD_DIR;
+            git clone -b master $REPO $RELEASE;
+            
+            # Build JavaScript bundle
+            cd $BUILD_DIR/$RELEASE;
+            yarn --production &&
+            yarn run build &&
+            
+            # Create Release directory
+            [ -d $RELEASE_DIR ] || mkdir $RELEASE_DIR;
+            [ -d $RELEASE_DIR/$RELEASE ] || mkdir $RELEASE_DIR/$RELEASE;
+            
+            # Copy needed files from build to release
+            cp favicon.png $RELEASE_DIR/$RELEASE &&
+            cp index.html $RELEASE_DIR/$RELEASE &&
+            cp -r public/ $RELEASE_DIR/$RELEASE &&
+            
+            
+            # Create symlink to the latest release
+            ln -nfs $RELEASE_DIR/$RELEASE $BASE_DIR\"/latest\";
+            
+        </function (props, context, updater) {
+              // This constructor gets overridden by mocks. The argument is used
+              // by mocks to assert on what gets mounted.
+        
+              if (process.env.NODE_ENV !== 'production') {
+                process.env.NODE_ENV !== 'production' ? warning(this instanceof Constructor, 'Something is calling a React component directly. Use a factory or ' + 'JSX instead. See: https://fb.me/react-legacyfactory') : void 0;
+              }
+        
+              // Wire up auto-binding
+              if (this.__reactAutoBindPairs.length) {
+                bindAutoBindMethods(this);
+              }
+        
+              this.props = props;
+              this.context = context;
+              this.refs = emptyObject;
+              this.updater = updater || ReactNoopUpdateQueue;
+        
+              this.state = null;
+        
+              // ReactClasses doesn't have constructors. Instead, they use the
+              // getInitialState and componentWillMount methods for initialization.
+        
+              var initialState = this.getInitialState ? this.getInitialState() : null;
+              if (process.env.NODE_ENV !== 'production') {
+                // We allow auto-mocks to proceed as if they're returning null.
+                if (initialState === undefined && this.getInitialState._isMockFunction) {
+                  // This is probably bad practice. Consider warning here and
+                  // deprecating this convenience.
+                  initialState = null;
+                }
+              }
+              !(typeof initialState === 'object' && !Array.isArray(initialState)) ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s.getInitialState(): must return an object or null', Constructor.displayName || 'ReactCompositeComponent') : _prodInvariant('82', Constructor.displayName || 'ReactCompositeComponent') : void 0;
+        
+              this.state = initialState;
+            }>
+        <p>
+            The deploy script now creates a build directory where the JavaScript code is built and copied into the relase directory.
+        </p>
+        <h3>
+            Reflections
+        </h3>
+        <p>
+            Now there is a build step added, with some continuous integration using TravisCI to automatically run tests and eslint on git push. However the deploy script does not feel optimal. It is cloning a repository from GitHub, including a lot of files not needed, building the JavaScript bundle actually needed, then copies the bundle along with a few files from the repository.
+        </p>
+        <p>
+            It would be better to be able to automate the building of the JavaScript bundle, and check the bundle into its own version control, and tag it accordingly. Actually, the repository containing the JavaScript to be built should also be tagged on each release.
+        </p>
+        <p>
+            During the process of getting this pipeline at place, it hit me that it would be nice to have a script to revert to latest version in case of something breking with a new release.
+        </p>
+        <h3>
+            Improvment points
+        </h3>
+        <p>
+            The improvments to be made this time is to better automate the build process, and take care of the artifacts in a better way, as well as thinking about automating the process of reverting a release.
         </p>
     </article>
     <article>
         <h2>
-            Continuous Delivery Pipeline - Take one
+            Continuous Delivery Pipeline - Take one (2016-09-18)
         </h2>
         <p>
             So this is my attempt at creating a continuous delivery pipeline. First it seems like a good idea to just deliver something to a server manually to get a feel for what needs to be done, and what steps can be automated.
@@ -269,8 +780,7 @@ ShallowWrapper {
               this.state = initialState;
             }>
         <p>
-            The project is checked in at 
-             
+            The project is checked in at
             <a
                 href="https://github.com/w1nston/jwdotcom"
                 target="_blank">
@@ -282,8 +792,7 @@ ShallowWrapper {
             The server structure
         </h3>
         <p>
-            The server is running on a virtual private server (VPS), setup with Ubuntu 14.04 LTS. Following the guides on 
-             
+            The server is running on a virtual private server (VPS), setup with Ubuntu 14.04 LTS. Following the guides on
             <a
                 href="https://www.linode.com/docs/security/securing-your-server"
                 target="_blank">
@@ -333,8 +842,7 @@ ShallowWrapper {
               this.state = initialState;
             }>
         <p>
-            To serve the content I use 
-             
+            To serve the content I use
             <a
                 href="https://nginx.org/en/"
                 target="_blank">
@@ -461,8 +969,7 @@ ShallowWrapper {
             Release versioning
         </h4>
         <p>
-            Okay, so just a date won\'t cut it. Lets play a little with something similar to 
-             
+            Okay, so just a date won\'t cut it. Lets play a little with something similar to
             <a
                 href="http://semver.org/"
                 target="_blank">
@@ -588,8 +1095,7 @@ ShallowWrapper {
               this.state = initialState;
             }>
         <p>
-            Although, I found 
-             
+            Although, I found
             <a
                 href="https://serversforhackers.com/video/automating-deployment-from-github"
                 target="_blank">
@@ -650,7 +1156,7 @@ ShallowWrapper {
       className="main-content-container__blog">
       <article>
             <h2>
-                  Continuous Delivery Pipeline - Take two
+                  Continuous Delivery Pipeline - Take two (2016-11-09)
             </h2>
             <p>
                   Last time the improvement points were to set a better version number, and to decrease the amount of manual steps. To fix that I put together the script deploy.sh described below.
@@ -721,15 +1227,12 @@ ShallowWrapper {
                   The new project structure
             </h3>
             <p>
-                  Now it is time to increase the complexity a bit, lets add a build step. For the heck of it is time to add some 
-                   
+                  Now it is time to increase the complexity a bit, lets add a build step. For the heck of it is time to add some
                   <a
                         href="https://facebook.github.io/react/"
                         target="_blank">
                         React
                   </a>
-                   
-                   
                   <a
                         href="https://react-router.now.sh/"
                         target="_blank">
@@ -738,17 +1241,13 @@ ShallowWrapper {
                    to the mix.
             </p>
             <p>
-                  So in order to add React and stuff, I want to add a nice structure for the JavaScript to live in. This structure is then supposed to be built into compliant JavaScript code using 
-                   
+                  So in order to add React and stuff, I want to add a nice structure for the JavaScript to live in. This structure is then supposed to be built into compliant JavaScript code using
                   <a
                         href="https://webpack.github.io/"
                         target="_blank">
                         webpack
                   </a>
-                   
-                   
-                  and 
-                   
+                  and
                   <a
                         href="https://babeljs.io/"
                         target="_blank">
@@ -826,27 +1325,545 @@ ShallowWrapper {
                   The build step
             </h3>
             <p>
-                  Since I am using React and ES6 I am also using babel to 
-                   
+                  Since I am using React and ES6 I am also using babel to
                   <a
                         href="https://en.wikipedia.org/wiki/Source-to-source_compiler"
                         target="_blank">
                         transpile
                   </a>
-                   
-                   
-                  the JavaScript to ES5 so that the browser can understand it. This is my build step, transpiling the JavaScript and create an artifact to be used in \"production\".
+                  the JavaScript to ES5 so that the browser can understand it. This will be the build step that I want to automate.
             </p>
             <h4>
                   Enter webpack
             </h4>
             <p>
-                  ...
+                  Webpack is a module bundler, it says so on the
+                  <a
+                        href="http://webpack.github.io/docs/what-is-webpack.html"
+                        target="_blank">
+                        webpage
+                  </a>
+                  , and I will use it to specify the JavaScript bundle I want to build for my webpage. Its configuration lives in a file (
+                  <b>
+                        webpack.config.js
+                  </b>
+                  ) in the root directory, and the points of interest are the 
+                  <b>
+                        entry
+                  </b>
+                  , 
+                  <b>
+                        output
+                  </b>
+                  , 
+                  <b>
+                        plugins
+                  </b>
+                  , and
+                  <b>
+                        loaders
+                  </b>
+                   properties.
+            </p>
+            <p>
+                  <b>
+                        The
+                        <a
+                              href="https://webpack.github.io/docs/configuration.html#entry"
+                              target="_blank">
+                              entry
+                        </a>
+                  </b>
+                   property specifies the file(s) that are to be loaded as entry point for the bundle.
+            </p>
+            <p>
+                  <b>
+                        The
+                        <a
+                              href="https://webpack.github.io/docs/configuration.html#output"
+                              target="_blank">
+                              output
+                        </a>
+                  </b>
+                   property specifies how webpack should write the bundle output file.
+            </p>
+            <p>
+                  <b>
+                        The
+                        <a
+                              href="https://webpack.github.io/docs/configuration.html#plugins"
+                              target="_blank">
+                              plugins
+                        </a>
+                  </b>
+                   property specifies plugins to be used in order to work on the bundle. For instance to uglify/minify the bundle.
+                  <a
+                        href="http://webpack.github.io/docs/using-plugins.html"
+                        target="_blank"
+                        title="Webpack using plugins">
+                        [*]
+                  </a>
+            </p>
+            <p>
+                  <b>
+                        The
+                        <a
+                              href="https://webpack.github.io/docs/configuration.html#module-loaders"
+                              target="_blank">
+                              loaders
+                        </a>
+                  </b>
+                   property specifies loaders to transform files. A loader is basically a function that takes a resource/file as input, performs a transformation of the content of that file, and finally returns a new file to be used in the bundle.
+                  <a
+                        href="http://webpack.github.io/docs/using-loaders.html"
+                        target="_blank"
+                        title="Webpack using loaders">
+                        [*]
+                  </a>
+                  For example taking an input file written with ES6 syntax, using babel to transpile the content, and then return a new file with browser compatible ES5 syntax for the bundle.
+            </p>
+            <p>
+                  Below is the webpack.config used for this site.
+            </p>
+            <Highlight
+                  className="js"
+                  element={null}
+                  innerHTML={false}>
+                  const path = require(\'path\');
+                  const webpack = require(\'webpack\');
+                  
+                  module.exports = {
+                    devtool: \'cheap-module-eval-source-map\',
+                    entry: [
+                      \'babel-polyfill\',
+                      \'webpack-hot-middleware/client\',
+                      \'./app/index\'
+                    ],
+                    output: {
+                      path: path.resolve(__dirname, \'public/assets/javascript\'),
+                      filename: \'index.js\',
+                      publicPath: \'public/assets/javascript/\'
+                    },
+                    plugins: [
+                      new webpack.optimize.OccurenceOrderPlugin(),
+                      new webpack.HotModuleReplacementPlugin()
+                    ],
+                    module: {
+                      loaders: [
+                        {
+                          loader: \'babel-loader\',
+                          include: [
+                            path.resolve(__dirname, \'app\'),
+                          ],
+                          exclude: /node_modules/,
+                          test: /.js/,
+                          query: {
+                            plugins: [\'transform-runtime\'],
+                            presets: [\'es2015\', \'react\']
+                          }
+                        }
+                      ]
+                    }
+                  };
+            </function (props, context, updater) {
+                  // This constructor gets overridden by mocks. The argument is used
+                  // by mocks to assert on what gets mounted.
+            
+                  if (process.env.NODE_ENV !== 'production') {
+                    process.env.NODE_ENV !== 'production' ? warning(this instanceof Constructor, 'Something is calling a React component directly. Use a factory or ' + 'JSX instead. See: https://fb.me/react-legacyfactory') : void 0;
+                  }
+            
+                  // Wire up auto-binding
+                  if (this.__reactAutoBindPairs.length) {
+                    bindAutoBindMethods(this);
+                  }
+            
+                  this.props = props;
+                  this.context = context;
+                  this.refs = emptyObject;
+                  this.updater = updater || ReactNoopUpdateQueue;
+            
+                  this.state = null;
+            
+                  // ReactClasses doesn't have constructors. Instead, they use the
+                  // getInitialState and componentWillMount methods for initialization.
+            
+                  var initialState = this.getInitialState ? this.getInitialState() : null;
+                  if (process.env.NODE_ENV !== 'production') {
+                    // We allow auto-mocks to proceed as if they're returning null.
+                    if (initialState === undefined && this.getInitialState._isMockFunction) {
+                      // This is probably bad practice. Consider warning here and
+                      // deprecating this convenience.
+                      initialState = null;
+                    }
+                  }
+                  !(typeof initialState === 'object' && !Array.isArray(initialState)) ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s.getInitialState(): must return an object or null', Constructor.displayName || 'ReactCompositeComponent') : _prodInvariant('82', Constructor.displayName || 'ReactCompositeComponent') : void 0;
+            
+                  this.state = initialState;
+                }>
+            <p>
+                  When the configuration is done, the bundle is created by running the command
+                  <b>
+                        webpack
+                  </b>
+                   from the root of the project.
+            </p>
+            <h4>
+                  TravisCI
+            </h4>
+            <p>
+                  <a
+                        href="https://travis-ci.org"
+                        target="_blank">
+                        Travis CI
+                  </a>
+                  \"is a hosted
+                  <a
+                        href="http://www.martinfowler.com/articles/continuousIntegration.html"
+                        target="_blank">
+                        continuous integration
+                  </a>
+                   and deployment system\"
+                  <a
+                        href="https://github.com/travis-ci/travis-ci"
+                        target="_blank"
+                        title="TravisCI Readme">
+                        [*]
+                  </a>
+                   that I will use since it is easy to use together with GitHub.
+            </p>
+            <p>
+                  The idea is to add a \".travis.yml\" file to instruct Travis to perform a set of tasks. The tasks I want to add are to perform an \"npm install\", through
+                  <a
+                        href="https://yarnpkg.com/"
+                        target="_blank">
+                        yarn
+                  </a>
+                  , running the tests, running
+                  <a
+                        href="http://eslint.org/"
+                        target="_blank">
+                        eslint
+                  </a>
+                  , and if all passes, building the JavaScript to be used. Okay, let\'s go, .travis.yml!
+            </p>
+            <Highlight
+                  className="yaml"
+                  element={null}
+                  innerHTML={false}>
+                  language: node_js
+                  node_js:
+                    - \"6\"
+                  before_install:
+                    # Repo for newer Node.js versions
+                    - curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+                    # Repo for Yarn
+                    - sudo apt-key adv --fetch-keys http://dl.yarnpkg.com/debian/pubkey.gpg
+                    - echo \"deb http://dl.yarnpkg.com/debian/ stable main\" | sudo tee /etc/apt/sources.list.d/yarn.list
+                    - sudo apt-get update -qq
+                    - sudo apt-get install -y -qq yarn
+                  cache:
+                    directories:
+                    - $HOME/.yarn-cache
+                  script:
+                    - yarn run lint
+                    - yarn run test
+                  
+            </function (props, context, updater) {
+                  // This constructor gets overridden by mocks. The argument is used
+                  // by mocks to assert on what gets mounted.
+            
+                  if (process.env.NODE_ENV !== 'production') {
+                    process.env.NODE_ENV !== 'production' ? warning(this instanceof Constructor, 'Something is calling a React component directly. Use a factory or ' + 'JSX instead. See: https://fb.me/react-legacyfactory') : void 0;
+                  }
+            
+                  // Wire up auto-binding
+                  if (this.__reactAutoBindPairs.length) {
+                    bindAutoBindMethods(this);
+                  }
+            
+                  this.props = props;
+                  this.context = context;
+                  this.refs = emptyObject;
+                  this.updater = updater || ReactNoopUpdateQueue;
+            
+                  this.state = null;
+            
+                  // ReactClasses doesn't have constructors. Instead, they use the
+                  // getInitialState and componentWillMount methods for initialization.
+            
+                  var initialState = this.getInitialState ? this.getInitialState() : null;
+                  if (process.env.NODE_ENV !== 'production') {
+                    // We allow auto-mocks to proceed as if they're returning null.
+                    if (initialState === undefined && this.getInitialState._isMockFunction) {
+                      // This is probably bad practice. Consider warning here and
+                      // deprecating this convenience.
+                      initialState = null;
+                    }
+                  }
+                  !(typeof initialState === 'object' && !Array.isArray(initialState)) ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s.getInitialState(): must return an object or null', Constructor.displayName || 'ReactCompositeComponent') : _prodInvariant('82', Constructor.displayName || 'ReactCompositeComponent') : void 0;
+            
+                  this.state = initialState;
+                }>
+            <p>
+                  After
+                  <a
+                        href="https://docs.travis-ci.com/user/getting-started/"
+                        target="_blank">
+                        setting up Travis
+                  </a>
+                   and pushing the .travis.yml file to Github, a step is still missing. The JavaScript bundle is not built. I am not sure right now how to make it so that the bundle is built and pushed somewhere, so for now I will just make it simple and build it on the server when the build is passing. It is time to move forward and later refactor, at least TravisCI is at place continuously running eslint and tests on every git push!
+            </p>
+            <h4>
+                  deploy.sh
+            </h4>
+            <p>
+                  Now there are a lot of unnecessary files added to the repository, that are not really needed for the site to function. That means that the deploy.sh script has to be updated to account for the new situation.
+            </p>
+            <p>
+                  But first, install yarn in the same way as it is done for TravisCI...
+            </p>
+            <p>
+                  ...and then find some issues. webpack needs a production build configuration. In my case I use the hot module replacement to get hot reloading for the react components, and since the same config was used to build the bundle for production as the one used with webpack-dev-server things got weird.
+            </p>
+            <p>
+                  It was also necessary to
+                  <a
+                        href="http://bit.ly/2fuIDVL"
+                        target="_blank">
+                        add a plugin for webpack
+                  </a>
+                   to get React built for production rather than a development environment.
+            </p>
+            <Highlight
+                  className="js"
+                  element={null}
+                  innerHTML={false}>
+                  new webpack.DefinePlugin({
+                    \'process.env\': {
+                      NODE_ENV: JSON.stringify(\'production\')
+                    }
+                  }),
+            </function (props, context, updater) {
+                  // This constructor gets overridden by mocks. The argument is used
+                  // by mocks to assert on what gets mounted.
+            
+                  if (process.env.NODE_ENV !== 'production') {
+                    process.env.NODE_ENV !== 'production' ? warning(this instanceof Constructor, 'Something is calling a React component directly. Use a factory or ' + 'JSX instead. See: https://fb.me/react-legacyfactory') : void 0;
+                  }
+            
+                  // Wire up auto-binding
+                  if (this.__reactAutoBindPairs.length) {
+                    bindAutoBindMethods(this);
+                  }
+            
+                  this.props = props;
+                  this.context = context;
+                  this.refs = emptyObject;
+                  this.updater = updater || ReactNoopUpdateQueue;
+            
+                  this.state = null;
+            
+                  // ReactClasses doesn't have constructors. Instead, they use the
+                  // getInitialState and componentWillMount methods for initialization.
+            
+                  var initialState = this.getInitialState ? this.getInitialState() : null;
+                  if (process.env.NODE_ENV !== 'production') {
+                    // We allow auto-mocks to proceed as if they're returning null.
+                    if (initialState === undefined && this.getInitialState._isMockFunction) {
+                      // This is probably bad practice. Consider warning here and
+                      // deprecating this convenience.
+                      initialState = null;
+                    }
+                  }
+                  !(typeof initialState === 'object' && !Array.isArray(initialState)) ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s.getInitialState(): must return an object or null', Constructor.displayName || 'ReactCompositeComponent') : _prodInvariant('82', Constructor.displayName || 'ReactCompositeComponent') : void 0;
+            
+                  this.state = initialState;
+                }>
+            <h4>
+                  Webpack revised
+            </h4>
+            <p>
+                  I am creating a webpack.production.config.js file at first, to see if this will work. The content of it resembles the development config, and will be a good candidate to extract some common config file, however, for now it will have to live in its own file.
+            </p>
+            <Highlight
+                  className="js"
+                  element={null}
+                  innerHTML={false}>
+                  const path = require(\'path\');
+                  const webpack = require(\'webpack\');
+                  
+                  module.exports = {
+                    entry: [
+                      \'babel-polyfill\',
+                      \'./app/index\'
+                    ],
+                    output: {
+                      path: path.resolve(__dirname, \'public/assets/javascript\'),
+                      filename: \'index.js\',
+                      publicPath: \'public/assets/javascript/\'
+                    },
+                    plugins: [
+                      new webpack.optimize.OccurenceOrderPlugin(),
+                      new webpack.DefinePlugin({
+                        \'process.env\': {
+                          NODE_ENV: JSON.stringify(\'production\')
+                        }
+                      }),
+                      new webpack.optimize.UglifyJsPlugin()
+                    ],
+                    module: {
+                      loaders: [
+                        {
+                          loader: \'babel-loader\',
+                          include: [
+                            path.resolve(__dirname, \'app\'),
+                          ],
+                          exclude: /node_modules/,
+                          test: /.js/,
+                          query: {
+                            plugins: [\'transform-runtime\'],
+                            presets: [\'es2015\', \'react\']
+                          }
+                        }
+                      ]
+                    }
+                  };
+            </function (props, context, updater) {
+                  // This constructor gets overridden by mocks. The argument is used
+                  // by mocks to assert on what gets mounted.
+            
+                  if (process.env.NODE_ENV !== 'production') {
+                    process.env.NODE_ENV !== 'production' ? warning(this instanceof Constructor, 'Something is calling a React component directly. Use a factory or ' + 'JSX instead. See: https://fb.me/react-legacyfactory') : void 0;
+                  }
+            
+                  // Wire up auto-binding
+                  if (this.__reactAutoBindPairs.length) {
+                    bindAutoBindMethods(this);
+                  }
+            
+                  this.props = props;
+                  this.context = context;
+                  this.refs = emptyObject;
+                  this.updater = updater || ReactNoopUpdateQueue;
+            
+                  this.state = null;
+            
+                  // ReactClasses doesn't have constructors. Instead, they use the
+                  // getInitialState and componentWillMount methods for initialization.
+            
+                  var initialState = this.getInitialState ? this.getInitialState() : null;
+                  if (process.env.NODE_ENV !== 'production') {
+                    // We allow auto-mocks to proceed as if they're returning null.
+                    if (initialState === undefined && this.getInitialState._isMockFunction) {
+                      // This is probably bad practice. Consider warning here and
+                      // deprecating this convenience.
+                      initialState = null;
+                    }
+                  }
+                  !(typeof initialState === 'object' && !Array.isArray(initialState)) ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s.getInitialState(): must return an object or null', Constructor.displayName || 'ReactCompositeComponent') : _prodInvariant('82', Constructor.displayName || 'ReactCompositeComponent') : void 0;
+            
+                  this.state = initialState;
+                }>
+            <h4>
+                  deploy.sh revised
+            </h4>
+            <Highlight
+                  className="bash"
+                  element={null}
+                  innerHTML={false}>
+                  #!/usr/bin/env bash
+                  
+                  REPO=\"https://github.com/w1nston/jwdotcom.git\";
+                  BASE_DIR=\"/srv/www/jonaswallander.com\";
+                  BUILD_DIR=\"${BASE_DIR}/builds\";
+                  RELEASE_DIR=\"${BASE_DIR}/releases\";
+                  RELEASE=\"\`date +%Y\`.\`date +%m\`.\`date +%d\`.$1\";
+                  
+                  # Fetch source code
+                  [ -d $BUILD_DIR ] || mkdir $BUILD_DIR;
+                  cd $BUILD_DIR;
+                  git clone -b master $REPO $RELEASE;
+                  
+                  # Build JavaScript bundle
+                  cd $BUILD_DIR/$RELEASE;
+                  yarn --production &&
+                  yarn run build &&
+                  
+                  # Create Release directory
+                  [ -d $RELEASE_DIR ] || mkdir $RELEASE_DIR;
+                  [ -d $RELEASE_DIR/$RELEASE ] || mkdir $RELEASE_DIR/$RELEASE;
+                  
+                  # Copy needed files from build to release
+                  cp favicon.png $RELEASE_DIR/$RELEASE &&
+                  cp index.html $RELEASE_DIR/$RELEASE &&
+                  cp -r public/ $RELEASE_DIR/$RELEASE &&
+                  
+                  
+                  # Create symlink to the latest release
+                  ln -nfs $RELEASE_DIR/$RELEASE $BASE_DIR\"/latest\";
+                  
+            </function (props, context, updater) {
+                  // This constructor gets overridden by mocks. The argument is used
+                  // by mocks to assert on what gets mounted.
+            
+                  if (process.env.NODE_ENV !== 'production') {
+                    process.env.NODE_ENV !== 'production' ? warning(this instanceof Constructor, 'Something is calling a React component directly. Use a factory or ' + 'JSX instead. See: https://fb.me/react-legacyfactory') : void 0;
+                  }
+            
+                  // Wire up auto-binding
+                  if (this.__reactAutoBindPairs.length) {
+                    bindAutoBindMethods(this);
+                  }
+            
+                  this.props = props;
+                  this.context = context;
+                  this.refs = emptyObject;
+                  this.updater = updater || ReactNoopUpdateQueue;
+            
+                  this.state = null;
+            
+                  // ReactClasses doesn't have constructors. Instead, they use the
+                  // getInitialState and componentWillMount methods for initialization.
+            
+                  var initialState = this.getInitialState ? this.getInitialState() : null;
+                  if (process.env.NODE_ENV !== 'production') {
+                    // We allow auto-mocks to proceed as if they're returning null.
+                    if (initialState === undefined && this.getInitialState._isMockFunction) {
+                      // This is probably bad practice. Consider warning here and
+                      // deprecating this convenience.
+                      initialState = null;
+                    }
+                  }
+                  !(typeof initialState === 'object' && !Array.isArray(initialState)) ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s.getInitialState(): must return an object or null', Constructor.displayName || 'ReactCompositeComponent') : _prodInvariant('82', Constructor.displayName || 'ReactCompositeComponent') : void 0;
+            
+                  this.state = initialState;
+                }>
+            <p>
+                  The deploy script now creates a build directory where the JavaScript code is built and copied into the relase directory.
+            </p>
+            <h3>
+                  Reflections
+            </h3>
+            <p>
+                  Now there is a build step added, with some continuous integration using TravisCI to automatically run tests and eslint on git push. However the deploy script does not feel optimal. It is cloning a repository from GitHub, including a lot of files not needed, building the JavaScript bundle actually needed, then copies the bundle along with a few files from the repository.
+            </p>
+            <p>
+                  It would be better to be able to automate the building of the JavaScript bundle, and check the bundle into its own version control, and tag it accordingly. Actually, the repository containing the JavaScript to be built should also be tagged on each release.
+            </p>
+            <p>
+                  During the process of getting this pipeline at place, it hit me that it would be nice to have a script to revert to latest version in case of something breking with a new release.
+            </p>
+            <h3>
+                  Improvment points
+            </h3>
+            <p>
+                  The improvments to be made this time is to better automate the build process, and take care of the artifacts in a better way, as well as thinking about automating the process of reverting a release.
             </p>
       </article>
       <article>
             <h2>
-                  Continuous Delivery Pipeline - Take one
+                  Continuous Delivery Pipeline - Take one (2016-09-18)
             </h2>
             <p>
                   So this is my attempt at creating a continuous delivery pipeline. First it seems like a good idea to just deliver something to a server manually to get a feel for what needs to be done, and what steps can be automated.
@@ -909,8 +1926,7 @@ ShallowWrapper {
                   this.state = initialState;
                 }>
             <p>
-                  The project is checked in at 
-                   
+                  The project is checked in at
                   <a
                         href="https://github.com/w1nston/jwdotcom"
                         target="_blank">
@@ -922,8 +1938,7 @@ ShallowWrapper {
                   The server structure
             </h3>
             <p>
-                  The server is running on a virtual private server (VPS), setup with Ubuntu 14.04 LTS. Following the guides on 
-                   
+                  The server is running on a virtual private server (VPS), setup with Ubuntu 14.04 LTS. Following the guides on
                   <a
                         href="https://www.linode.com/docs/security/securing-your-server"
                         target="_blank">
@@ -973,8 +1988,7 @@ ShallowWrapper {
                   this.state = initialState;
                 }>
             <p>
-                  To serve the content I use 
-                   
+                  To serve the content I use
                   <a
                         href="https://nginx.org/en/"
                         target="_blank">
@@ -1101,8 +2115,7 @@ ShallowWrapper {
                   Release versioning
             </h4>
             <p>
-                  Okay, so just a date won\'t cut it. Lets play a little with something similar to 
-                   
+                  Okay, so just a date won\'t cut it. Lets play a little with something similar to
                   <a
                         href="http://semver.org/"
                         target="_blank">
@@ -1228,8 +2241,7 @@ ShallowWrapper {
                   this.state = initialState;
                 }>
             <p>
-                  Although, I found 
-                   
+                  Although, I found
                   <a
                         href="https://serversforhackers.com/video/automating-deployment-from-github"
                         target="_blank">
@@ -1324,7 +2336,7 @@ ShallowWrapper {
           className="main-content-container__blog">
           <article>
                     <h2>
-                              Continuous Delivery Pipeline - Take two
+                              Continuous Delivery Pipeline - Take two (2016-11-09)
                     </h2>
                     <p>
                               Last time the improvement points were to set a better version number, and to decrease the amount of manual steps. To fix that I put together the script deploy.sh described below.
@@ -1395,15 +2407,12 @@ ShallowWrapper {
                               The new project structure
                     </h3>
                     <p>
-                              Now it is time to increase the complexity a bit, lets add a build step. For the heck of it is time to add some 
-                               
+                              Now it is time to increase the complexity a bit, lets add a build step. For the heck of it is time to add some
                               <a
                                         href="https://facebook.github.io/react/"
                                         target="_blank">
                                         React
                               </a>
-                               
-                               
                               <a
                                         href="https://react-router.now.sh/"
                                         target="_blank">
@@ -1412,17 +2421,13 @@ ShallowWrapper {
                                to the mix.
                     </p>
                     <p>
-                              So in order to add React and stuff, I want to add a nice structure for the JavaScript to live in. This structure is then supposed to be built into compliant JavaScript code using 
-                               
+                              So in order to add React and stuff, I want to add a nice structure for the JavaScript to live in. This structure is then supposed to be built into compliant JavaScript code using
                               <a
                                         href="https://webpack.github.io/"
                                         target="_blank">
                                         webpack
                               </a>
-                               
-                               
-                              and 
-                               
+                              and
                               <a
                                         href="https://babeljs.io/"
                                         target="_blank">
@@ -1500,27 +2505,545 @@ ShallowWrapper {
                               The build step
                     </h3>
                     <p>
-                              Since I am using React and ES6 I am also using babel to 
-                               
+                              Since I am using React and ES6 I am also using babel to
                               <a
                                         href="https://en.wikipedia.org/wiki/Source-to-source_compiler"
                                         target="_blank">
                                         transpile
                               </a>
-                               
-                               
-                              the JavaScript to ES5 so that the browser can understand it. This is my build step, transpiling the JavaScript and create an artifact to be used in \"production\".
+                              the JavaScript to ES5 so that the browser can understand it. This will be the build step that I want to automate.
                     </p>
                     <h4>
                               Enter webpack
                     </h4>
                     <p>
-                              ...
+                              Webpack is a module bundler, it says so on the
+                              <a
+                                        href="http://webpack.github.io/docs/what-is-webpack.html"
+                                        target="_blank">
+                                        webpage
+                              </a>
+                              , and I will use it to specify the JavaScript bundle I want to build for my webpage. Its configuration lives in a file (
+                              <b>
+                                        webpack.config.js
+                              </b>
+                              ) in the root directory, and the points of interest are the 
+                              <b>
+                                        entry
+                              </b>
+                              , 
+                              <b>
+                                        output
+                              </b>
+                              , 
+                              <b>
+                                        plugins
+                              </b>
+                              , and
+                              <b>
+                                        loaders
+                              </b>
+                               properties.
+                    </p>
+                    <p>
+                              <b>
+                                        The
+                                        <a
+                                                  href="https://webpack.github.io/docs/configuration.html#entry"
+                                                  target="_blank">
+                                                  entry
+                                        </a>
+                              </b>
+                               property specifies the file(s) that are to be loaded as entry point for the bundle.
+                    </p>
+                    <p>
+                              <b>
+                                        The
+                                        <a
+                                                  href="https://webpack.github.io/docs/configuration.html#output"
+                                                  target="_blank">
+                                                  output
+                                        </a>
+                              </b>
+                               property specifies how webpack should write the bundle output file.
+                    </p>
+                    <p>
+                              <b>
+                                        The
+                                        <a
+                                                  href="https://webpack.github.io/docs/configuration.html#plugins"
+                                                  target="_blank">
+                                                  plugins
+                                        </a>
+                              </b>
+                               property specifies plugins to be used in order to work on the bundle. For instance to uglify/minify the bundle.
+                              <a
+                                        href="http://webpack.github.io/docs/using-plugins.html"
+                                        target="_blank"
+                                        title="Webpack using plugins">
+                                        [*]
+                              </a>
+                    </p>
+                    <p>
+                              <b>
+                                        The
+                                        <a
+                                                  href="https://webpack.github.io/docs/configuration.html#module-loaders"
+                                                  target="_blank">
+                                                  loaders
+                                        </a>
+                              </b>
+                               property specifies loaders to transform files. A loader is basically a function that takes a resource/file as input, performs a transformation of the content of that file, and finally returns a new file to be used in the bundle.
+                              <a
+                                        href="http://webpack.github.io/docs/using-loaders.html"
+                                        target="_blank"
+                                        title="Webpack using loaders">
+                                        [*]
+                              </a>
+                              For example taking an input file written with ES6 syntax, using babel to transpile the content, and then return a new file with browser compatible ES5 syntax for the bundle.
+                    </p>
+                    <p>
+                              Below is the webpack.config used for this site.
+                    </p>
+                    <Highlight
+                              className="js"
+                              element={null}
+                              innerHTML={false}>
+                              const path = require(\'path\');
+                              const webpack = require(\'webpack\');
+                              
+                              module.exports = {
+                                devtool: \'cheap-module-eval-source-map\',
+                                entry: [
+                                  \'babel-polyfill\',
+                                  \'webpack-hot-middleware/client\',
+                                  \'./app/index\'
+                                ],
+                                output: {
+                                  path: path.resolve(__dirname, \'public/assets/javascript\'),
+                                  filename: \'index.js\',
+                                  publicPath: \'public/assets/javascript/\'
+                                },
+                                plugins: [
+                                  new webpack.optimize.OccurenceOrderPlugin(),
+                                  new webpack.HotModuleReplacementPlugin()
+                                ],
+                                module: {
+                                  loaders: [
+                                    {
+                                      loader: \'babel-loader\',
+                                      include: [
+                                        path.resolve(__dirname, \'app\'),
+                                      ],
+                                      exclude: /node_modules/,
+                                      test: /.js/,
+                                      query: {
+                                        plugins: [\'transform-runtime\'],
+                                        presets: [\'es2015\', \'react\']
+                                      }
+                                    }
+                                  ]
+                                }
+                              };
+                    </function (props, context, updater) {
+                          // This constructor gets overridden by mocks. The argument is used
+                          // by mocks to assert on what gets mounted.
+                    
+                          if (process.env.NODE_ENV !== 'production') {
+                            process.env.NODE_ENV !== 'production' ? warning(this instanceof Constructor, 'Something is calling a React component directly. Use a factory or ' + 'JSX instead. See: https://fb.me/react-legacyfactory') : void 0;
+                          }
+                    
+                          // Wire up auto-binding
+                          if (this.__reactAutoBindPairs.length) {
+                            bindAutoBindMethods(this);
+                          }
+                    
+                          this.props = props;
+                          this.context = context;
+                          this.refs = emptyObject;
+                          this.updater = updater || ReactNoopUpdateQueue;
+                    
+                          this.state = null;
+                    
+                          // ReactClasses doesn't have constructors. Instead, they use the
+                          // getInitialState and componentWillMount methods for initialization.
+                    
+                          var initialState = this.getInitialState ? this.getInitialState() : null;
+                          if (process.env.NODE_ENV !== 'production') {
+                            // We allow auto-mocks to proceed as if they're returning null.
+                            if (initialState === undefined && this.getInitialState._isMockFunction) {
+                              // This is probably bad practice. Consider warning here and
+                              // deprecating this convenience.
+                              initialState = null;
+                            }
+                          }
+                          !(typeof initialState === 'object' && !Array.isArray(initialState)) ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s.getInitialState(): must return an object or null', Constructor.displayName || 'ReactCompositeComponent') : _prodInvariant('82', Constructor.displayName || 'ReactCompositeComponent') : void 0;
+                    
+                          this.state = initialState;
+                        }>
+                    <p>
+                              When the configuration is done, the bundle is created by running the command
+                              <b>
+                                        webpack
+                              </b>
+                               from the root of the project.
+                    </p>
+                    <h4>
+                              TravisCI
+                    </h4>
+                    <p>
+                              <a
+                                        href="https://travis-ci.org"
+                                        target="_blank">
+                                        Travis CI
+                              </a>
+                              \"is a hosted
+                              <a
+                                        href="http://www.martinfowler.com/articles/continuousIntegration.html"
+                                        target="_blank">
+                                        continuous integration
+                              </a>
+                               and deployment system\"
+                              <a
+                                        href="https://github.com/travis-ci/travis-ci"
+                                        target="_blank"
+                                        title="TravisCI Readme">
+                                        [*]
+                              </a>
+                               that I will use since it is easy to use together with GitHub.
+                    </p>
+                    <p>
+                              The idea is to add a \".travis.yml\" file to instruct Travis to perform a set of tasks. The tasks I want to add are to perform an \"npm install\", through
+                              <a
+                                        href="https://yarnpkg.com/"
+                                        target="_blank">
+                                        yarn
+                              </a>
+                              , running the tests, running
+                              <a
+                                        href="http://eslint.org/"
+                                        target="_blank">
+                                        eslint
+                              </a>
+                              , and if all passes, building the JavaScript to be used. Okay, let\'s go, .travis.yml!
+                    </p>
+                    <Highlight
+                              className="yaml"
+                              element={null}
+                              innerHTML={false}>
+                              language: node_js
+                              node_js:
+                                - \"6\"
+                              before_install:
+                                # Repo for newer Node.js versions
+                                - curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+                                # Repo for Yarn
+                                - sudo apt-key adv --fetch-keys http://dl.yarnpkg.com/debian/pubkey.gpg
+                                - echo \"deb http://dl.yarnpkg.com/debian/ stable main\" | sudo tee /etc/apt/sources.list.d/yarn.list
+                                - sudo apt-get update -qq
+                                - sudo apt-get install -y -qq yarn
+                              cache:
+                                directories:
+                                - $HOME/.yarn-cache
+                              script:
+                                - yarn run lint
+                                - yarn run test
+                              
+                    </function (props, context, updater) {
+                          // This constructor gets overridden by mocks. The argument is used
+                          // by mocks to assert on what gets mounted.
+                    
+                          if (process.env.NODE_ENV !== 'production') {
+                            process.env.NODE_ENV !== 'production' ? warning(this instanceof Constructor, 'Something is calling a React component directly. Use a factory or ' + 'JSX instead. See: https://fb.me/react-legacyfactory') : void 0;
+                          }
+                    
+                          // Wire up auto-binding
+                          if (this.__reactAutoBindPairs.length) {
+                            bindAutoBindMethods(this);
+                          }
+                    
+                          this.props = props;
+                          this.context = context;
+                          this.refs = emptyObject;
+                          this.updater = updater || ReactNoopUpdateQueue;
+                    
+                          this.state = null;
+                    
+                          // ReactClasses doesn't have constructors. Instead, they use the
+                          // getInitialState and componentWillMount methods for initialization.
+                    
+                          var initialState = this.getInitialState ? this.getInitialState() : null;
+                          if (process.env.NODE_ENV !== 'production') {
+                            // We allow auto-mocks to proceed as if they're returning null.
+                            if (initialState === undefined && this.getInitialState._isMockFunction) {
+                              // This is probably bad practice. Consider warning here and
+                              // deprecating this convenience.
+                              initialState = null;
+                            }
+                          }
+                          !(typeof initialState === 'object' && !Array.isArray(initialState)) ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s.getInitialState(): must return an object or null', Constructor.displayName || 'ReactCompositeComponent') : _prodInvariant('82', Constructor.displayName || 'ReactCompositeComponent') : void 0;
+                    
+                          this.state = initialState;
+                        }>
+                    <p>
+                              After
+                              <a
+                                        href="https://docs.travis-ci.com/user/getting-started/"
+                                        target="_blank">
+                                        setting up Travis
+                              </a>
+                               and pushing the .travis.yml file to Github, a step is still missing. The JavaScript bundle is not built. I am not sure right now how to make it so that the bundle is built and pushed somewhere, so for now I will just make it simple and build it on the server when the build is passing. It is time to move forward and later refactor, at least TravisCI is at place continuously running eslint and tests on every git push!
+                    </p>
+                    <h4>
+                              deploy.sh
+                    </h4>
+                    <p>
+                              Now there are a lot of unnecessary files added to the repository, that are not really needed for the site to function. That means that the deploy.sh script has to be updated to account for the new situation.
+                    </p>
+                    <p>
+                              But first, install yarn in the same way as it is done for TravisCI...
+                    </p>
+                    <p>
+                              ...and then find some issues. webpack needs a production build configuration. In my case I use the hot module replacement to get hot reloading for the react components, and since the same config was used to build the bundle for production as the one used with webpack-dev-server things got weird.
+                    </p>
+                    <p>
+                              It was also necessary to
+                              <a
+                                        href="http://bit.ly/2fuIDVL"
+                                        target="_blank">
+                                        add a plugin for webpack
+                              </a>
+                               to get React built for production rather than a development environment.
+                    </p>
+                    <Highlight
+                              className="js"
+                              element={null}
+                              innerHTML={false}>
+                              new webpack.DefinePlugin({
+                                \'process.env\': {
+                                  NODE_ENV: JSON.stringify(\'production\')
+                                }
+                              }),
+                    </function (props, context, updater) {
+                          // This constructor gets overridden by mocks. The argument is used
+                          // by mocks to assert on what gets mounted.
+                    
+                          if (process.env.NODE_ENV !== 'production') {
+                            process.env.NODE_ENV !== 'production' ? warning(this instanceof Constructor, 'Something is calling a React component directly. Use a factory or ' + 'JSX instead. See: https://fb.me/react-legacyfactory') : void 0;
+                          }
+                    
+                          // Wire up auto-binding
+                          if (this.__reactAutoBindPairs.length) {
+                            bindAutoBindMethods(this);
+                          }
+                    
+                          this.props = props;
+                          this.context = context;
+                          this.refs = emptyObject;
+                          this.updater = updater || ReactNoopUpdateQueue;
+                    
+                          this.state = null;
+                    
+                          // ReactClasses doesn't have constructors. Instead, they use the
+                          // getInitialState and componentWillMount methods for initialization.
+                    
+                          var initialState = this.getInitialState ? this.getInitialState() : null;
+                          if (process.env.NODE_ENV !== 'production') {
+                            // We allow auto-mocks to proceed as if they're returning null.
+                            if (initialState === undefined && this.getInitialState._isMockFunction) {
+                              // This is probably bad practice. Consider warning here and
+                              // deprecating this convenience.
+                              initialState = null;
+                            }
+                          }
+                          !(typeof initialState === 'object' && !Array.isArray(initialState)) ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s.getInitialState(): must return an object or null', Constructor.displayName || 'ReactCompositeComponent') : _prodInvariant('82', Constructor.displayName || 'ReactCompositeComponent') : void 0;
+                    
+                          this.state = initialState;
+                        }>
+                    <h4>
+                              Webpack revised
+                    </h4>
+                    <p>
+                              I am creating a webpack.production.config.js file at first, to see if this will work. The content of it resembles the development config, and will be a good candidate to extract some common config file, however, for now it will have to live in its own file.
+                    </p>
+                    <Highlight
+                              className="js"
+                              element={null}
+                              innerHTML={false}>
+                              const path = require(\'path\');
+                              const webpack = require(\'webpack\');
+                              
+                              module.exports = {
+                                entry: [
+                                  \'babel-polyfill\',
+                                  \'./app/index\'
+                                ],
+                                output: {
+                                  path: path.resolve(__dirname, \'public/assets/javascript\'),
+                                  filename: \'index.js\',
+                                  publicPath: \'public/assets/javascript/\'
+                                },
+                                plugins: [
+                                  new webpack.optimize.OccurenceOrderPlugin(),
+                                  new webpack.DefinePlugin({
+                                    \'process.env\': {
+                                      NODE_ENV: JSON.stringify(\'production\')
+                                    }
+                                  }),
+                                  new webpack.optimize.UglifyJsPlugin()
+                                ],
+                                module: {
+                                  loaders: [
+                                    {
+                                      loader: \'babel-loader\',
+                                      include: [
+                                        path.resolve(__dirname, \'app\'),
+                                      ],
+                                      exclude: /node_modules/,
+                                      test: /.js/,
+                                      query: {
+                                        plugins: [\'transform-runtime\'],
+                                        presets: [\'es2015\', \'react\']
+                                      }
+                                    }
+                                  ]
+                                }
+                              };
+                    </function (props, context, updater) {
+                          // This constructor gets overridden by mocks. The argument is used
+                          // by mocks to assert on what gets mounted.
+                    
+                          if (process.env.NODE_ENV !== 'production') {
+                            process.env.NODE_ENV !== 'production' ? warning(this instanceof Constructor, 'Something is calling a React component directly. Use a factory or ' + 'JSX instead. See: https://fb.me/react-legacyfactory') : void 0;
+                          }
+                    
+                          // Wire up auto-binding
+                          if (this.__reactAutoBindPairs.length) {
+                            bindAutoBindMethods(this);
+                          }
+                    
+                          this.props = props;
+                          this.context = context;
+                          this.refs = emptyObject;
+                          this.updater = updater || ReactNoopUpdateQueue;
+                    
+                          this.state = null;
+                    
+                          // ReactClasses doesn't have constructors. Instead, they use the
+                          // getInitialState and componentWillMount methods for initialization.
+                    
+                          var initialState = this.getInitialState ? this.getInitialState() : null;
+                          if (process.env.NODE_ENV !== 'production') {
+                            // We allow auto-mocks to proceed as if they're returning null.
+                            if (initialState === undefined && this.getInitialState._isMockFunction) {
+                              // This is probably bad practice. Consider warning here and
+                              // deprecating this convenience.
+                              initialState = null;
+                            }
+                          }
+                          !(typeof initialState === 'object' && !Array.isArray(initialState)) ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s.getInitialState(): must return an object or null', Constructor.displayName || 'ReactCompositeComponent') : _prodInvariant('82', Constructor.displayName || 'ReactCompositeComponent') : void 0;
+                    
+                          this.state = initialState;
+                        }>
+                    <h4>
+                              deploy.sh revised
+                    </h4>
+                    <Highlight
+                              className="bash"
+                              element={null}
+                              innerHTML={false}>
+                              #!/usr/bin/env bash
+                              
+                              REPO=\"https://github.com/w1nston/jwdotcom.git\";
+                              BASE_DIR=\"/srv/www/jonaswallander.com\";
+                              BUILD_DIR=\"${BASE_DIR}/builds\";
+                              RELEASE_DIR=\"${BASE_DIR}/releases\";
+                              RELEASE=\"\`date +%Y\`.\`date +%m\`.\`date +%d\`.$1\";
+                              
+                              # Fetch source code
+                              [ -d $BUILD_DIR ] || mkdir $BUILD_DIR;
+                              cd $BUILD_DIR;
+                              git clone -b master $REPO $RELEASE;
+                              
+                              # Build JavaScript bundle
+                              cd $BUILD_DIR/$RELEASE;
+                              yarn --production &&
+                              yarn run build &&
+                              
+                              # Create Release directory
+                              [ -d $RELEASE_DIR ] || mkdir $RELEASE_DIR;
+                              [ -d $RELEASE_DIR/$RELEASE ] || mkdir $RELEASE_DIR/$RELEASE;
+                              
+                              # Copy needed files from build to release
+                              cp favicon.png $RELEASE_DIR/$RELEASE &&
+                              cp index.html $RELEASE_DIR/$RELEASE &&
+                              cp -r public/ $RELEASE_DIR/$RELEASE &&
+                              
+                              
+                              # Create symlink to the latest release
+                              ln -nfs $RELEASE_DIR/$RELEASE $BASE_DIR\"/latest\";
+                              
+                    </function (props, context, updater) {
+                          // This constructor gets overridden by mocks. The argument is used
+                          // by mocks to assert on what gets mounted.
+                    
+                          if (process.env.NODE_ENV !== 'production') {
+                            process.env.NODE_ENV !== 'production' ? warning(this instanceof Constructor, 'Something is calling a React component directly. Use a factory or ' + 'JSX instead. See: https://fb.me/react-legacyfactory') : void 0;
+                          }
+                    
+                          // Wire up auto-binding
+                          if (this.__reactAutoBindPairs.length) {
+                            bindAutoBindMethods(this);
+                          }
+                    
+                          this.props = props;
+                          this.context = context;
+                          this.refs = emptyObject;
+                          this.updater = updater || ReactNoopUpdateQueue;
+                    
+                          this.state = null;
+                    
+                          // ReactClasses doesn't have constructors. Instead, they use the
+                          // getInitialState and componentWillMount methods for initialization.
+                    
+                          var initialState = this.getInitialState ? this.getInitialState() : null;
+                          if (process.env.NODE_ENV !== 'production') {
+                            // We allow auto-mocks to proceed as if they're returning null.
+                            if (initialState === undefined && this.getInitialState._isMockFunction) {
+                              // This is probably bad practice. Consider warning here and
+                              // deprecating this convenience.
+                              initialState = null;
+                            }
+                          }
+                          !(typeof initialState === 'object' && !Array.isArray(initialState)) ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s.getInitialState(): must return an object or null', Constructor.displayName || 'ReactCompositeComponent') : _prodInvariant('82', Constructor.displayName || 'ReactCompositeComponent') : void 0;
+                    
+                          this.state = initialState;
+                        }>
+                    <p>
+                              The deploy script now creates a build directory where the JavaScript code is built and copied into the relase directory.
+                    </p>
+                    <h3>
+                              Reflections
+                    </h3>
+                    <p>
+                              Now there is a build step added, with some continuous integration using TravisCI to automatically run tests and eslint on git push. However the deploy script does not feel optimal. It is cloning a repository from GitHub, including a lot of files not needed, building the JavaScript bundle actually needed, then copies the bundle along with a few files from the repository.
+                    </p>
+                    <p>
+                              It would be better to be able to automate the building of the JavaScript bundle, and check the bundle into its own version control, and tag it accordingly. Actually, the repository containing the JavaScript to be built should also be tagged on each release.
+                    </p>
+                    <p>
+                              During the process of getting this pipeline at place, it hit me that it would be nice to have a script to revert to latest version in case of something breking with a new release.
+                    </p>
+                    <h3>
+                              Improvment points
+                    </h3>
+                    <p>
+                              The improvments to be made this time is to better automate the build process, and take care of the artifacts in a better way, as well as thinking about automating the process of reverting a release.
                     </p>
           </article>
           <article>
                     <h2>
-                              Continuous Delivery Pipeline - Take one
+                              Continuous Delivery Pipeline - Take one (2016-09-18)
                     </h2>
                     <p>
                               So this is my attempt at creating a continuous delivery pipeline. First it seems like a good idea to just deliver something to a server manually to get a feel for what needs to be done, and what steps can be automated.
@@ -1583,8 +3106,7 @@ ShallowWrapper {
                           this.state = initialState;
                         }>
                     <p>
-                              The project is checked in at 
-                               
+                              The project is checked in at
                               <a
                                         href="https://github.com/w1nston/jwdotcom"
                                         target="_blank">
@@ -1596,8 +3118,7 @@ ShallowWrapper {
                               The server structure
                     </h3>
                     <p>
-                              The server is running on a virtual private server (VPS), setup with Ubuntu 14.04 LTS. Following the guides on 
-                               
+                              The server is running on a virtual private server (VPS), setup with Ubuntu 14.04 LTS. Following the guides on
                               <a
                                         href="https://www.linode.com/docs/security/securing-your-server"
                                         target="_blank">
@@ -1647,8 +3168,7 @@ ShallowWrapper {
                           this.state = initialState;
                         }>
                     <p>
-                              To serve the content I use 
-                               
+                              To serve the content I use
                               <a
                                         href="https://nginx.org/en/"
                                         target="_blank">
@@ -1775,8 +3295,7 @@ ShallowWrapper {
                               Release versioning
                     </h4>
                     <p>
-                              Okay, so just a date won\'t cut it. Lets play a little with something similar to 
-                               
+                              Okay, so just a date won\'t cut it. Lets play a little with something similar to
                               <a
                                         href="http://semver.org/"
                                         target="_blank">
@@ -1902,8 +3421,7 @@ ShallowWrapper {
                           this.state = initialState;
                         }>
                     <p>
-                              Although, I found 
-                               
+                              Although, I found
                               <a
                                         href="https://serversforhackers.com/video/automating-deployment-from-github"
                                         target="_blank">
@@ -1964,7 +3482,7 @@ ShallowWrapper {
           className="main-content-container__blog">
           <article>
                     <h2>
-                              Continuous Delivery Pipeline - Take two
+                              Continuous Delivery Pipeline - Take two (2016-11-09)
                     </h2>
                     <p>
                               Last time the improvement points were to set a better version number, and to decrease the amount of manual steps. To fix that I put together the script deploy.sh described below.
@@ -2035,15 +3553,12 @@ ShallowWrapper {
                               The new project structure
                     </h3>
                     <p>
-                              Now it is time to increase the complexity a bit, lets add a build step. For the heck of it is time to add some 
-                               
+                              Now it is time to increase the complexity a bit, lets add a build step. For the heck of it is time to add some
                               <a
                                         href="https://facebook.github.io/react/"
                                         target="_blank">
                                         React
                               </a>
-                               
-                               
                               <a
                                         href="https://react-router.now.sh/"
                                         target="_blank">
@@ -2052,17 +3567,13 @@ ShallowWrapper {
                                to the mix.
                     </p>
                     <p>
-                              So in order to add React and stuff, I want to add a nice structure for the JavaScript to live in. This structure is then supposed to be built into compliant JavaScript code using 
-                               
+                              So in order to add React and stuff, I want to add a nice structure for the JavaScript to live in. This structure is then supposed to be built into compliant JavaScript code using
                               <a
                                         href="https://webpack.github.io/"
                                         target="_blank">
                                         webpack
                               </a>
-                               
-                               
-                              and 
-                               
+                              and
                               <a
                                         href="https://babeljs.io/"
                                         target="_blank">
@@ -2140,27 +3651,545 @@ ShallowWrapper {
                               The build step
                     </h3>
                     <p>
-                              Since I am using React and ES6 I am also using babel to 
-                               
+                              Since I am using React and ES6 I am also using babel to
                               <a
                                         href="https://en.wikipedia.org/wiki/Source-to-source_compiler"
                                         target="_blank">
                                         transpile
                               </a>
-                               
-                               
-                              the JavaScript to ES5 so that the browser can understand it. This is my build step, transpiling the JavaScript and create an artifact to be used in \"production\".
+                              the JavaScript to ES5 so that the browser can understand it. This will be the build step that I want to automate.
                     </p>
                     <h4>
                               Enter webpack
                     </h4>
                     <p>
-                              ...
+                              Webpack is a module bundler, it says so on the
+                              <a
+                                        href="http://webpack.github.io/docs/what-is-webpack.html"
+                                        target="_blank">
+                                        webpage
+                              </a>
+                              , and I will use it to specify the JavaScript bundle I want to build for my webpage. Its configuration lives in a file (
+                              <b>
+                                        webpack.config.js
+                              </b>
+                              ) in the root directory, and the points of interest are the 
+                              <b>
+                                        entry
+                              </b>
+                              , 
+                              <b>
+                                        output
+                              </b>
+                              , 
+                              <b>
+                                        plugins
+                              </b>
+                              , and
+                              <b>
+                                        loaders
+                              </b>
+                               properties.
+                    </p>
+                    <p>
+                              <b>
+                                        The
+                                        <a
+                                                  href="https://webpack.github.io/docs/configuration.html#entry"
+                                                  target="_blank">
+                                                  entry
+                                        </a>
+                              </b>
+                               property specifies the file(s) that are to be loaded as entry point for the bundle.
+                    </p>
+                    <p>
+                              <b>
+                                        The
+                                        <a
+                                                  href="https://webpack.github.io/docs/configuration.html#output"
+                                                  target="_blank">
+                                                  output
+                                        </a>
+                              </b>
+                               property specifies how webpack should write the bundle output file.
+                    </p>
+                    <p>
+                              <b>
+                                        The
+                                        <a
+                                                  href="https://webpack.github.io/docs/configuration.html#plugins"
+                                                  target="_blank">
+                                                  plugins
+                                        </a>
+                              </b>
+                               property specifies plugins to be used in order to work on the bundle. For instance to uglify/minify the bundle.
+                              <a
+                                        href="http://webpack.github.io/docs/using-plugins.html"
+                                        target="_blank"
+                                        title="Webpack using plugins">
+                                        [*]
+                              </a>
+                    </p>
+                    <p>
+                              <b>
+                                        The
+                                        <a
+                                                  href="https://webpack.github.io/docs/configuration.html#module-loaders"
+                                                  target="_blank">
+                                                  loaders
+                                        </a>
+                              </b>
+                               property specifies loaders to transform files. A loader is basically a function that takes a resource/file as input, performs a transformation of the content of that file, and finally returns a new file to be used in the bundle.
+                              <a
+                                        href="http://webpack.github.io/docs/using-loaders.html"
+                                        target="_blank"
+                                        title="Webpack using loaders">
+                                        [*]
+                              </a>
+                              For example taking an input file written with ES6 syntax, using babel to transpile the content, and then return a new file with browser compatible ES5 syntax for the bundle.
+                    </p>
+                    <p>
+                              Below is the webpack.config used for this site.
+                    </p>
+                    <Highlight
+                              className="js"
+                              element={null}
+                              innerHTML={false}>
+                              const path = require(\'path\');
+                              const webpack = require(\'webpack\');
+                              
+                              module.exports = {
+                                devtool: \'cheap-module-eval-source-map\',
+                                entry: [
+                                  \'babel-polyfill\',
+                                  \'webpack-hot-middleware/client\',
+                                  \'./app/index\'
+                                ],
+                                output: {
+                                  path: path.resolve(__dirname, \'public/assets/javascript\'),
+                                  filename: \'index.js\',
+                                  publicPath: \'public/assets/javascript/\'
+                                },
+                                plugins: [
+                                  new webpack.optimize.OccurenceOrderPlugin(),
+                                  new webpack.HotModuleReplacementPlugin()
+                                ],
+                                module: {
+                                  loaders: [
+                                    {
+                                      loader: \'babel-loader\',
+                                      include: [
+                                        path.resolve(__dirname, \'app\'),
+                                      ],
+                                      exclude: /node_modules/,
+                                      test: /.js/,
+                                      query: {
+                                        plugins: [\'transform-runtime\'],
+                                        presets: [\'es2015\', \'react\']
+                                      }
+                                    }
+                                  ]
+                                }
+                              };
+                    </function (props, context, updater) {
+                          // This constructor gets overridden by mocks. The argument is used
+                          // by mocks to assert on what gets mounted.
+                    
+                          if (process.env.NODE_ENV !== 'production') {
+                            process.env.NODE_ENV !== 'production' ? warning(this instanceof Constructor, 'Something is calling a React component directly. Use a factory or ' + 'JSX instead. See: https://fb.me/react-legacyfactory') : void 0;
+                          }
+                    
+                          // Wire up auto-binding
+                          if (this.__reactAutoBindPairs.length) {
+                            bindAutoBindMethods(this);
+                          }
+                    
+                          this.props = props;
+                          this.context = context;
+                          this.refs = emptyObject;
+                          this.updater = updater || ReactNoopUpdateQueue;
+                    
+                          this.state = null;
+                    
+                          // ReactClasses doesn't have constructors. Instead, they use the
+                          // getInitialState and componentWillMount methods for initialization.
+                    
+                          var initialState = this.getInitialState ? this.getInitialState() : null;
+                          if (process.env.NODE_ENV !== 'production') {
+                            // We allow auto-mocks to proceed as if they're returning null.
+                            if (initialState === undefined && this.getInitialState._isMockFunction) {
+                              // This is probably bad practice. Consider warning here and
+                              // deprecating this convenience.
+                              initialState = null;
+                            }
+                          }
+                          !(typeof initialState === 'object' && !Array.isArray(initialState)) ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s.getInitialState(): must return an object or null', Constructor.displayName || 'ReactCompositeComponent') : _prodInvariant('82', Constructor.displayName || 'ReactCompositeComponent') : void 0;
+                    
+                          this.state = initialState;
+                        }>
+                    <p>
+                              When the configuration is done, the bundle is created by running the command
+                              <b>
+                                        webpack
+                              </b>
+                               from the root of the project.
+                    </p>
+                    <h4>
+                              TravisCI
+                    </h4>
+                    <p>
+                              <a
+                                        href="https://travis-ci.org"
+                                        target="_blank">
+                                        Travis CI
+                              </a>
+                              \"is a hosted
+                              <a
+                                        href="http://www.martinfowler.com/articles/continuousIntegration.html"
+                                        target="_blank">
+                                        continuous integration
+                              </a>
+                               and deployment system\"
+                              <a
+                                        href="https://github.com/travis-ci/travis-ci"
+                                        target="_blank"
+                                        title="TravisCI Readme">
+                                        [*]
+                              </a>
+                               that I will use since it is easy to use together with GitHub.
+                    </p>
+                    <p>
+                              The idea is to add a \".travis.yml\" file to instruct Travis to perform a set of tasks. The tasks I want to add are to perform an \"npm install\", through
+                              <a
+                                        href="https://yarnpkg.com/"
+                                        target="_blank">
+                                        yarn
+                              </a>
+                              , running the tests, running
+                              <a
+                                        href="http://eslint.org/"
+                                        target="_blank">
+                                        eslint
+                              </a>
+                              , and if all passes, building the JavaScript to be used. Okay, let\'s go, .travis.yml!
+                    </p>
+                    <Highlight
+                              className="yaml"
+                              element={null}
+                              innerHTML={false}>
+                              language: node_js
+                              node_js:
+                                - \"6\"
+                              before_install:
+                                # Repo for newer Node.js versions
+                                - curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+                                # Repo for Yarn
+                                - sudo apt-key adv --fetch-keys http://dl.yarnpkg.com/debian/pubkey.gpg
+                                - echo \"deb http://dl.yarnpkg.com/debian/ stable main\" | sudo tee /etc/apt/sources.list.d/yarn.list
+                                - sudo apt-get update -qq
+                                - sudo apt-get install -y -qq yarn
+                              cache:
+                                directories:
+                                - $HOME/.yarn-cache
+                              script:
+                                - yarn run lint
+                                - yarn run test
+                              
+                    </function (props, context, updater) {
+                          // This constructor gets overridden by mocks. The argument is used
+                          // by mocks to assert on what gets mounted.
+                    
+                          if (process.env.NODE_ENV !== 'production') {
+                            process.env.NODE_ENV !== 'production' ? warning(this instanceof Constructor, 'Something is calling a React component directly. Use a factory or ' + 'JSX instead. See: https://fb.me/react-legacyfactory') : void 0;
+                          }
+                    
+                          // Wire up auto-binding
+                          if (this.__reactAutoBindPairs.length) {
+                            bindAutoBindMethods(this);
+                          }
+                    
+                          this.props = props;
+                          this.context = context;
+                          this.refs = emptyObject;
+                          this.updater = updater || ReactNoopUpdateQueue;
+                    
+                          this.state = null;
+                    
+                          // ReactClasses doesn't have constructors. Instead, they use the
+                          // getInitialState and componentWillMount methods for initialization.
+                    
+                          var initialState = this.getInitialState ? this.getInitialState() : null;
+                          if (process.env.NODE_ENV !== 'production') {
+                            // We allow auto-mocks to proceed as if they're returning null.
+                            if (initialState === undefined && this.getInitialState._isMockFunction) {
+                              // This is probably bad practice. Consider warning here and
+                              // deprecating this convenience.
+                              initialState = null;
+                            }
+                          }
+                          !(typeof initialState === 'object' && !Array.isArray(initialState)) ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s.getInitialState(): must return an object or null', Constructor.displayName || 'ReactCompositeComponent') : _prodInvariant('82', Constructor.displayName || 'ReactCompositeComponent') : void 0;
+                    
+                          this.state = initialState;
+                        }>
+                    <p>
+                              After
+                              <a
+                                        href="https://docs.travis-ci.com/user/getting-started/"
+                                        target="_blank">
+                                        setting up Travis
+                              </a>
+                               and pushing the .travis.yml file to Github, a step is still missing. The JavaScript bundle is not built. I am not sure right now how to make it so that the bundle is built and pushed somewhere, so for now I will just make it simple and build it on the server when the build is passing. It is time to move forward and later refactor, at least TravisCI is at place continuously running eslint and tests on every git push!
+                    </p>
+                    <h4>
+                              deploy.sh
+                    </h4>
+                    <p>
+                              Now there are a lot of unnecessary files added to the repository, that are not really needed for the site to function. That means that the deploy.sh script has to be updated to account for the new situation.
+                    </p>
+                    <p>
+                              But first, install yarn in the same way as it is done for TravisCI...
+                    </p>
+                    <p>
+                              ...and then find some issues. webpack needs a production build configuration. In my case I use the hot module replacement to get hot reloading for the react components, and since the same config was used to build the bundle for production as the one used with webpack-dev-server things got weird.
+                    </p>
+                    <p>
+                              It was also necessary to
+                              <a
+                                        href="http://bit.ly/2fuIDVL"
+                                        target="_blank">
+                                        add a plugin for webpack
+                              </a>
+                               to get React built for production rather than a development environment.
+                    </p>
+                    <Highlight
+                              className="js"
+                              element={null}
+                              innerHTML={false}>
+                              new webpack.DefinePlugin({
+                                \'process.env\': {
+                                  NODE_ENV: JSON.stringify(\'production\')
+                                }
+                              }),
+                    </function (props, context, updater) {
+                          // This constructor gets overridden by mocks. The argument is used
+                          // by mocks to assert on what gets mounted.
+                    
+                          if (process.env.NODE_ENV !== 'production') {
+                            process.env.NODE_ENV !== 'production' ? warning(this instanceof Constructor, 'Something is calling a React component directly. Use a factory or ' + 'JSX instead. See: https://fb.me/react-legacyfactory') : void 0;
+                          }
+                    
+                          // Wire up auto-binding
+                          if (this.__reactAutoBindPairs.length) {
+                            bindAutoBindMethods(this);
+                          }
+                    
+                          this.props = props;
+                          this.context = context;
+                          this.refs = emptyObject;
+                          this.updater = updater || ReactNoopUpdateQueue;
+                    
+                          this.state = null;
+                    
+                          // ReactClasses doesn't have constructors. Instead, they use the
+                          // getInitialState and componentWillMount methods for initialization.
+                    
+                          var initialState = this.getInitialState ? this.getInitialState() : null;
+                          if (process.env.NODE_ENV !== 'production') {
+                            // We allow auto-mocks to proceed as if they're returning null.
+                            if (initialState === undefined && this.getInitialState._isMockFunction) {
+                              // This is probably bad practice. Consider warning here and
+                              // deprecating this convenience.
+                              initialState = null;
+                            }
+                          }
+                          !(typeof initialState === 'object' && !Array.isArray(initialState)) ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s.getInitialState(): must return an object or null', Constructor.displayName || 'ReactCompositeComponent') : _prodInvariant('82', Constructor.displayName || 'ReactCompositeComponent') : void 0;
+                    
+                          this.state = initialState;
+                        }>
+                    <h4>
+                              Webpack revised
+                    </h4>
+                    <p>
+                              I am creating a webpack.production.config.js file at first, to see if this will work. The content of it resembles the development config, and will be a good candidate to extract some common config file, however, for now it will have to live in its own file.
+                    </p>
+                    <Highlight
+                              className="js"
+                              element={null}
+                              innerHTML={false}>
+                              const path = require(\'path\');
+                              const webpack = require(\'webpack\');
+                              
+                              module.exports = {
+                                entry: [
+                                  \'babel-polyfill\',
+                                  \'./app/index\'
+                                ],
+                                output: {
+                                  path: path.resolve(__dirname, \'public/assets/javascript\'),
+                                  filename: \'index.js\',
+                                  publicPath: \'public/assets/javascript/\'
+                                },
+                                plugins: [
+                                  new webpack.optimize.OccurenceOrderPlugin(),
+                                  new webpack.DefinePlugin({
+                                    \'process.env\': {
+                                      NODE_ENV: JSON.stringify(\'production\')
+                                    }
+                                  }),
+                                  new webpack.optimize.UglifyJsPlugin()
+                                ],
+                                module: {
+                                  loaders: [
+                                    {
+                                      loader: \'babel-loader\',
+                                      include: [
+                                        path.resolve(__dirname, \'app\'),
+                                      ],
+                                      exclude: /node_modules/,
+                                      test: /.js/,
+                                      query: {
+                                        plugins: [\'transform-runtime\'],
+                                        presets: [\'es2015\', \'react\']
+                                      }
+                                    }
+                                  ]
+                                }
+                              };
+                    </function (props, context, updater) {
+                          // This constructor gets overridden by mocks. The argument is used
+                          // by mocks to assert on what gets mounted.
+                    
+                          if (process.env.NODE_ENV !== 'production') {
+                            process.env.NODE_ENV !== 'production' ? warning(this instanceof Constructor, 'Something is calling a React component directly. Use a factory or ' + 'JSX instead. See: https://fb.me/react-legacyfactory') : void 0;
+                          }
+                    
+                          // Wire up auto-binding
+                          if (this.__reactAutoBindPairs.length) {
+                            bindAutoBindMethods(this);
+                          }
+                    
+                          this.props = props;
+                          this.context = context;
+                          this.refs = emptyObject;
+                          this.updater = updater || ReactNoopUpdateQueue;
+                    
+                          this.state = null;
+                    
+                          // ReactClasses doesn't have constructors. Instead, they use the
+                          // getInitialState and componentWillMount methods for initialization.
+                    
+                          var initialState = this.getInitialState ? this.getInitialState() : null;
+                          if (process.env.NODE_ENV !== 'production') {
+                            // We allow auto-mocks to proceed as if they're returning null.
+                            if (initialState === undefined && this.getInitialState._isMockFunction) {
+                              // This is probably bad practice. Consider warning here and
+                              // deprecating this convenience.
+                              initialState = null;
+                            }
+                          }
+                          !(typeof initialState === 'object' && !Array.isArray(initialState)) ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s.getInitialState(): must return an object or null', Constructor.displayName || 'ReactCompositeComponent') : _prodInvariant('82', Constructor.displayName || 'ReactCompositeComponent') : void 0;
+                    
+                          this.state = initialState;
+                        }>
+                    <h4>
+                              deploy.sh revised
+                    </h4>
+                    <Highlight
+                              className="bash"
+                              element={null}
+                              innerHTML={false}>
+                              #!/usr/bin/env bash
+                              
+                              REPO=\"https://github.com/w1nston/jwdotcom.git\";
+                              BASE_DIR=\"/srv/www/jonaswallander.com\";
+                              BUILD_DIR=\"${BASE_DIR}/builds\";
+                              RELEASE_DIR=\"${BASE_DIR}/releases\";
+                              RELEASE=\"\`date +%Y\`.\`date +%m\`.\`date +%d\`.$1\";
+                              
+                              # Fetch source code
+                              [ -d $BUILD_DIR ] || mkdir $BUILD_DIR;
+                              cd $BUILD_DIR;
+                              git clone -b master $REPO $RELEASE;
+                              
+                              # Build JavaScript bundle
+                              cd $BUILD_DIR/$RELEASE;
+                              yarn --production &&
+                              yarn run build &&
+                              
+                              # Create Release directory
+                              [ -d $RELEASE_DIR ] || mkdir $RELEASE_DIR;
+                              [ -d $RELEASE_DIR/$RELEASE ] || mkdir $RELEASE_DIR/$RELEASE;
+                              
+                              # Copy needed files from build to release
+                              cp favicon.png $RELEASE_DIR/$RELEASE &&
+                              cp index.html $RELEASE_DIR/$RELEASE &&
+                              cp -r public/ $RELEASE_DIR/$RELEASE &&
+                              
+                              
+                              # Create symlink to the latest release
+                              ln -nfs $RELEASE_DIR/$RELEASE $BASE_DIR\"/latest\";
+                              
+                    </function (props, context, updater) {
+                          // This constructor gets overridden by mocks. The argument is used
+                          // by mocks to assert on what gets mounted.
+                    
+                          if (process.env.NODE_ENV !== 'production') {
+                            process.env.NODE_ENV !== 'production' ? warning(this instanceof Constructor, 'Something is calling a React component directly. Use a factory or ' + 'JSX instead. See: https://fb.me/react-legacyfactory') : void 0;
+                          }
+                    
+                          // Wire up auto-binding
+                          if (this.__reactAutoBindPairs.length) {
+                            bindAutoBindMethods(this);
+                          }
+                    
+                          this.props = props;
+                          this.context = context;
+                          this.refs = emptyObject;
+                          this.updater = updater || ReactNoopUpdateQueue;
+                    
+                          this.state = null;
+                    
+                          // ReactClasses doesn't have constructors. Instead, they use the
+                          // getInitialState and componentWillMount methods for initialization.
+                    
+                          var initialState = this.getInitialState ? this.getInitialState() : null;
+                          if (process.env.NODE_ENV !== 'production') {
+                            // We allow auto-mocks to proceed as if they're returning null.
+                            if (initialState === undefined && this.getInitialState._isMockFunction) {
+                              // This is probably bad practice. Consider warning here and
+                              // deprecating this convenience.
+                              initialState = null;
+                            }
+                          }
+                          !(typeof initialState === 'object' && !Array.isArray(initialState)) ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s.getInitialState(): must return an object or null', Constructor.displayName || 'ReactCompositeComponent') : _prodInvariant('82', Constructor.displayName || 'ReactCompositeComponent') : void 0;
+                    
+                          this.state = initialState;
+                        }>
+                    <p>
+                              The deploy script now creates a build directory where the JavaScript code is built and copied into the relase directory.
+                    </p>
+                    <h3>
+                              Reflections
+                    </h3>
+                    <p>
+                              Now there is a build step added, with some continuous integration using TravisCI to automatically run tests and eslint on git push. However the deploy script does not feel optimal. It is cloning a repository from GitHub, including a lot of files not needed, building the JavaScript bundle actually needed, then copies the bundle along with a few files from the repository.
+                    </p>
+                    <p>
+                              It would be better to be able to automate the building of the JavaScript bundle, and check the bundle into its own version control, and tag it accordingly. Actually, the repository containing the JavaScript to be built should also be tagged on each release.
+                    </p>
+                    <p>
+                              During the process of getting this pipeline at place, it hit me that it would be nice to have a script to revert to latest version in case of something breking with a new release.
+                    </p>
+                    <h3>
+                              Improvment points
+                    </h3>
+                    <p>
+                              The improvments to be made this time is to better automate the build process, and take care of the artifacts in a better way, as well as thinking about automating the process of reverting a release.
                     </p>
           </article>
           <article>
                     <h2>
-                              Continuous Delivery Pipeline - Take one
+                              Continuous Delivery Pipeline - Take one (2016-09-18)
                     </h2>
                     <p>
                               So this is my attempt at creating a continuous delivery pipeline. First it seems like a good idea to just deliver something to a server manually to get a feel for what needs to be done, and what steps can be automated.
@@ -2223,8 +4252,7 @@ ShallowWrapper {
                           this.state = initialState;
                         }>
                     <p>
-                              The project is checked in at 
-                               
+                              The project is checked in at
                               <a
                                         href="https://github.com/w1nston/jwdotcom"
                                         target="_blank">
@@ -2236,8 +4264,7 @@ ShallowWrapper {
                               The server structure
                     </h3>
                     <p>
-                              The server is running on a virtual private server (VPS), setup with Ubuntu 14.04 LTS. Following the guides on 
-                               
+                              The server is running on a virtual private server (VPS), setup with Ubuntu 14.04 LTS. Following the guides on
                               <a
                                         href="https://www.linode.com/docs/security/securing-your-server"
                                         target="_blank">
@@ -2287,8 +4314,7 @@ ShallowWrapper {
                           this.state = initialState;
                         }>
                     <p>
-                              To serve the content I use 
-                               
+                              To serve the content I use
                               <a
                                         href="https://nginx.org/en/"
                                         target="_blank">
@@ -2415,8 +4441,7 @@ ShallowWrapper {
                               Release versioning
                     </h4>
                     <p>
-                              Okay, so just a date won\'t cut it. Lets play a little with something similar to 
-                               
+                              Okay, so just a date won\'t cut it. Lets play a little with something similar to
                               <a
                                         href="http://semver.org/"
                                         target="_blank">
@@ -2542,8 +4567,7 @@ ShallowWrapper {
                           this.state = initialState;
                         }>
                     <p>
-                              Although, I found 
-                               
+                              Although, I found
                               <a
                                         href="https://serversforhackers.com/video/automating-deployment-from-github"
                                         target="_blank">

@@ -5,7 +5,7 @@ export default function Blog() {
   return (
     <section className="main-content-container__blog">
       <article>
-        <h2>Continuous Delivery Pipeline - Take two</h2>
+        <h2>Continuous Delivery Pipeline - Take two (2016-11-09)</h2>
         <p>
           Last time the improvement points were to set a better version number, and to decrease
           the amount of manual steps. To fix that I put together the script deploy.sh described
@@ -15,7 +15,7 @@ export default function Blog() {
           {`#!/usr/bin/env bash
 REPO="https://github.com/\<username\>/\<repository name\>.git";
 BASE_DIR="/srv/www/example.com";
-RELEASE_DIR="\$\{BASE_DIR\}/releases";
+RELEASE_DIR="$\{BASE_DIR\}/releases";
 RELEASE="\`date +%Y\`.\`date +%m\`.\`date +%d\`.$1";
 
 # Fetch source code
@@ -286,6 +286,21 @@ script:
           the same config was used to build the bundle for production as the one used with
           webpack-dev-server things got weird.
         </p>
+        <p>
+          It was also necessary to
+          <a
+            href="http://bit.ly/2fuIDVL"
+            target="_blank"
+          >add a plugin for webpack</a> to get React built for production rather than a development
+          environment.
+        </p>
+        <Highlight className="js">
+          {`new webpack.DefinePlugin({
+  'process.env': {
+    NODE_ENV: JSON.stringify('production')
+  }
+}),`}
+        </Highlight>
         <h4>Webpack revised</h4>
         <p>
           I am creating a webpack.production.config.js file at first, to see if this will work.
@@ -308,6 +323,11 @@ module.exports = {
   },
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('production')
+      }
+    }),
     new webpack.optimize.UglifyJsPlugin()
   ],
   module: {
@@ -328,9 +348,70 @@ module.exports = {
   }
 };`}
         </Highlight>
+        <h4>deploy.sh revised</h4>
+        <Highlight className="bash">
+          {`#!/usr/bin/env bash
+
+REPO="https://github.com/w1nston/jwdotcom.git";
+BASE_DIR="/srv/www/jonaswallander.com";
+BUILD_DIR="$\{BASE_DIR\}/builds";
+RELEASE_DIR="$\{BASE_DIR\}/releases";
+RELEASE="\`date +%Y\`.\`date +%m\`.\`date +%d\`.$1";
+
+# Fetch source code
+[ -d $BUILD_DIR ] || mkdir $BUILD_DIR;
+cd $BUILD_DIR;
+git clone -b master $REPO $RELEASE;
+
+# Build JavaScript bundle
+cd $BUILD_DIR/$RELEASE;
+yarn --production &&
+yarn run build &&
+
+# Create Release directory
+[ -d $RELEASE_DIR ] || mkdir $RELEASE_DIR;
+[ -d $RELEASE_DIR/$RELEASE ] || mkdir $RELEASE_DIR/$RELEASE;
+
+# Copy needed files from build to release
+cp favicon.png $RELEASE_DIR/$RELEASE &&
+cp index.html $RELEASE_DIR/$RELEASE &&
+cp -r public/ $RELEASE_DIR/$RELEASE &&
+
+
+# Create symlink to the latest release
+ln -nfs $RELEASE_DIR/$RELEASE $BASE_DIR"/latest";
+`}
+        </Highlight>
+        <p>
+          The deploy script now creates a build directory where the JavaScript code is built and
+          copied into the relase directory.
+        </p>
+        <h3>Reflections</h3>
+        <p>
+          Now there is a build step added, with some continuous integration using TravisCI to
+          automatically run tests and eslint on git push. However the deploy script does not feel
+          optimal. It is cloning a repository from GitHub, including a lot of files not needed,
+          building the JavaScript bundle actually needed, then copies the bundle along with a few
+          files from the repository.
+        </p>
+        <p>
+          It would be better to be able to automate the building of the JavaScript bundle, and
+          check the bundle into its own version control, and tag it accordingly. Actually, the
+          repository containing the JavaScript to be built should also be tagged on each release.
+        </p>
+        <p>
+          During the process of getting this pipeline at place, it hit me that it would be nice to
+          have a script to revert to latest version in case of something breking with a new release.
+        </p>
+        <h3>Improvment points</h3>
+        <p>
+          The improvments to be made this time is to better automate the build process, and take
+          care of the artifacts in a better way, as well as thinking about automating the process
+          of reverting a release.
+        </p>
       </article>
       <article>
-        <h2>Continuous Delivery Pipeline - Take one</h2>
+        <h2>Continuous Delivery Pipeline - Take one (2016-09-18)</h2>
         <p>
           So this is my attempt at creating a continuous delivery pipeline.
           First it seems like a good idea to just deliver something to a
