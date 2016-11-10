@@ -409,6 +409,10 @@ ln -nfs $RELEASE_DIR/$RELEASE $BASE_DIR"/latest";
           care of the artifacts in a better way, as well as thinking about automating the process
           of reverting a release.
         </p>
+        <p>
+          Last addition is that I would like to have in place a more formal process of updating
+          the deploy.sh script and nginx config files.
+        </p>
       </article>
       <article>
         <h2>Continuous Delivery Pipeline - Take one (2016-09-18)</h2>
