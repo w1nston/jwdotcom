@@ -4,7 +4,7 @@ import Highlight from 'react-highlight';
 export default function Blog() {
   return (
     <section className="main-content-container__blog">
-      <article>
+      <article className="main-content-container__blogArticle">
         <h2>Continuous Delivery Pipeline - Take two (2016-11-09)</h2>
         <p>
           Last time the improvement points were to set a better version number, and to decrease
@@ -405,16 +405,52 @@ ln -nfs $RELEASE_DIR/$RELEASE $BASE_DIR"/latest";
         </p>
         <h3>Improvment points</h3>
         <p>
-          The improvments to be made this time is to better automate the build process, and take
-          care of the artifacts in a better way, as well as thinking about automating the process
-          of reverting a release.
+          The improvements to be made this time is to better automate the build process, tag the
+          release version in GitHub, and take care of the artifacts in a better way, as well as
+          thinking about automating the process of reverting a release.
         </p>
         <p>
-          Last addition is that I would like to have in place a more formal process of updating
-          the deploy.sh script and nginx config files.
+          Another thing is that I would like to have in place a more formal process of updating
+          the deploy.sh script and nginx config files. It could be difficult to figure out what
+          version of the deploy script was used with a specific release otherwise.
         </p>
+        <h3>One last thing</h3>
+        <p>
+          While deploying the new version with "yarn --production" some npm dependencies were not
+          found and made webpack crash on the build step on the production server. According to
+          <a
+            href="https://github.com/yarnpkg/yarn/issues/761"
+            target="_blank"
+          >this reported issue</a> the best workaround seems to be to simply install the
+          devDependencies along with the production dependencies. The new deploy script then will
+          look like the following instead.
+        </p>
+        <Highlight className="bash">
+          {`#!/usr/bin/env bash
+
+...
+
+# Fetch source code
+...
+
+# Build JavaScript bundle
+cd $BUILD_DIR/$RELEASE;
+yarn &&
+yarn run build &&
+
+# Create Release directory
+...
+
+# Copy needed files from build to release
+...
+
+
+# Create symlink to the latest release
+...
+`}
+        </Highlight>
       </article>
-      <article>
+      <article className="main-content-container__blogArticle">
         <h2>Continuous Delivery Pipeline - Take one (2016-09-18)</h2>
         <p>
           So this is my attempt at creating a continuous delivery pipeline.
