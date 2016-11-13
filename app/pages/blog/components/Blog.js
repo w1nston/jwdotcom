@@ -254,6 +254,8 @@ before_install:
 cache:
   directories:
   - $HOME/.yarn-cache
+install:
+  - yarn
 script:
   - yarn run lint
   - yarn run test
