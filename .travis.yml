@@ -13,5 +13,6 @@ cache:
   directories:
   - $HOME/.yarn-cache
 script:
+  - yarn
   - yarn run lint
   - yarn run test
