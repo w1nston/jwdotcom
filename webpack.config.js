@@ -25,7 +25,7 @@ module.exports = {
           path.resolve(__dirname, 'app'),
         ],
         exclude: /node_modules/,
-        test: /\.js/,
+        test: /\.js$/,
         query: {
           plugins: ['transform-runtime'],
           presets: ['es2015', 'react']
