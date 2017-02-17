@@ -1,6 +1,0 @@
-exports[`test that Home component is rendered 1`] = `
-<section
-  className="main-content-container__home">
-  This is not optimal, but life is not about optimal, it\'s about learning.
-</section>
-`;
