@@ -1,4 +1,4 @@
-const moment = require('moment');
+const moment = require('moment'); // TODO: Use different lib, immutable dates
 const winston = require('winston');
 
 const consoleTransport = new (winston.transports.Console)({

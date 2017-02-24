@@ -1,30 +1,29 @@
 const webpack = require('webpack');
+const nodeExternals = require('webpack-node-externals');
 const path = require('path');
 
-module.exports = env => ({
-  context: path.join(__dirname, '../src'),
+const clientConfig = {
+  context: path.join(__dirname, '../src/client'),
+  devtool: 'cheap-module-source-map',
   entry: {
-    blog: [
+    bundle: [
       'babel-polyfill',
-      './assets/javascript/blog/entry.jsx',
-    ],
-    home: [
-      'babel-polyfill',
-      './assets/javascript/home/entry.jsx',
+      './index.jsx',
     ],
   },
   plugins: [
     new webpack.optimize.OccurrenceOrderPlugin(),
   ],
   output: {
-    filename: env.prod ? '[name].[hash].js' : '[name].js',
+    filename: '[name].js',
     path: path.resolve(__dirname, '../public/assets/javascript'),
-    pathinfo: !env.prod,
+    pathinfo: true,
   },
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
         loader: 'babel-loader',
         query: {
           presets: ['es2015', 'react'],
@@ -35,5 +34,56 @@ module.exports = env => ({
   resolve: {
     modules: ['node_modules'],
     extensions: ['.js', '.json', '.jsx'],
+    alias: {
+      logger: path.join(__dirname, '../src/shared/logger.js'),
+    },
   },
-});
+};
+
+const serverConfig = {
+  context: path.join(__dirname, '../src'),
+  entry: {
+    server: [
+      'babel-polyfill',
+      './server/index.js',
+    ],
+  },
+  plugins: [
+    new webpack.BannerPlugin({
+      banner: 'require("source-map-support").install();',
+      raw: true,
+      entryOnly: false,
+    })
+  ],
+  output: {
+    filename: '[name].js',
+    path: path.resolve(__dirname, '../dist'),
+  },
+  node: {
+    __dirname: true,
+    __filename: true,
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['es2015', 'react'],
+        },
+      },
+    ],
+  },
+  target: 'node',
+  externals: nodeExternals(),
+  resolve: {
+    modules: ['node_modules'],
+    extensions: ['.js', '.json', '.jsx'],
+    alias: {
+      logger: path.join(__dirname, '../src/shared/logger.js'),
+    },
+  },
+};
+
+module.exports = [serverConfig, clientConfig];

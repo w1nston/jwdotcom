@@ -9,7 +9,9 @@ node_modules
 
 # Logs
 *.log
+logs
 
 # Generated files
-public/assets/javascript/*.js
-
+public/assets/javascript/*
+public/assets/css/*
+dist
