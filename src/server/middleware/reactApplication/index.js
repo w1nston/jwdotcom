@@ -18,8 +18,8 @@ export default function reactApplication(request, response) {
 
   const html = template({
     body: appString,
-    title: request.url,
     state: store.getState(),
   });
+
   response.status(200).send(html);
 }

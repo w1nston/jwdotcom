@@ -1,5 +1,10 @@
 import React from 'react';
+import DocumentTitle from 'react-document-title';
 
 export default function BlogPage() {
-  return <section>Blog!</section>;
+  return (
+    <DocumentTitle title="Blog">
+      <section>Blog!</section>
+    </DocumentTitle>
+  );
 }

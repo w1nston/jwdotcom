@@ -1,5 +1,10 @@
 import React from 'react';
+import DocumentTitle from 'react-document-title';
 
 export default function HomePage() {
-  return <section>Home</section>;
+  return (
+    <DocumentTitle title="Home">
+      <section>Home</section>
+    </DocumentTitle>
+  );
 }

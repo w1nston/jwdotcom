@@ -1,12 +1,14 @@
-const moment = require('moment'); // TODO: Use different lib, immutable dates
+const dateFns = require('date-fns');
 const winston = require('winston');
 
 const consoleTransport = new winston.transports.Console({
   timestamp() {
-    return moment().toISOString();
+    const now = new Date();
+    return dateFns.getTime(now);
   },
   formatter(options) {
-    return `[${options.timestamp()}][${options.level.toUpperCase()}] ` +
+    const timestamp = options.timestamp();
+    return `[${dateFns.format(timestamp)}][${timestamp}][${options.level.toUpperCase()}] ` +
       `${options.message}`;
   },
 });

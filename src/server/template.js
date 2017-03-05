@@ -1,10 +1,10 @@
-module.exports = function template({ body, title, state }) {
+module.exports = function template({ body, state }) {
   return `
     <!DOCTYPE html>
     <html>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>${title}</title>
+        <title></title>
         <link rel="stylesheet" href="/assets/css/index.css" />
       </head>
       
