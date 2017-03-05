@@ -1,7 +1,7 @@
 const moment = require('moment'); // TODO: Use different lib, immutable dates
 const winston = require('winston');
 
-const consoleTransport = new (winston.transports.Console)({
+const consoleTransport = new winston.transports.Console({
   timestamp() {
     return moment().toISOString();
   },
@@ -11,22 +11,18 @@ const consoleTransport = new (winston.transports.Console)({
   },
 });
 
-const fileInfoTransport = new (winston.transports.File)({
+const fileInfoTransport = new winston.transports.File({
   name: 'info-file',
   filename: `./logs/info.${process.env.NODE_ENV}.log`,
   level: 'info',
 });
 
-const fileErrorTransport = new (winston.transports.File)({
+const fileErrorTransport = new winston.transports.File({
   name: 'error-file',
   filename: `./logs/error.${process.env.NODE_ENV}.log`,
   level: 'error',
 });
 
 module.exports = {
-  transports: [
-    consoleTransport,
-    fileInfoTransport,
-    fileErrorTransport,
-  ],
+  transports: [consoleTransport, fileInfoTransport, fileErrorTransport],
 };

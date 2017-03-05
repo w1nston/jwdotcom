@@ -6,14 +6,9 @@ const clientConfig = {
   context: path.join(__dirname, '../src/client'),
   devtool: 'cheap-module-source-map',
   entry: {
-    bundle: [
-      'babel-polyfill',
-      './index.jsx',
-    ],
+    bundle: ['babel-polyfill', './index.jsx'],
   },
-  plugins: [
-    new webpack.optimize.OccurrenceOrderPlugin(),
-  ],
+  plugins: [new webpack.optimize.OccurrenceOrderPlugin()],
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, '../public/assets/javascript'),
@@ -43,17 +38,14 @@ const clientConfig = {
 const serverConfig = {
   context: path.join(__dirname, '../src'),
   entry: {
-    server: [
-      'babel-polyfill',
-      './server/index.js',
-    ],
+    server: ['babel-polyfill', './server/index.js'],
   },
   plugins: [
     new webpack.BannerPlugin({
       banner: 'require("source-map-support").install();',
       raw: true,
       entryOnly: false,
-    })
+    }),
   ],
   output: {
     filename: '[name].js',

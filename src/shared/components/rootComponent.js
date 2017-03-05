@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  Link,
-  Route,
-} from 'react-router-dom';
+import { Link, Route } from 'react-router-dom';
 import HomePage from './homePage';
 import BlogPage from './blogPage';
 
@@ -21,4 +18,4 @@ export default function rootComponent({ Router, location, context }) {
       </div>
     </Router>
   );
-};
+}

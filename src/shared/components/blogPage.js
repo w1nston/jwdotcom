@@ -1,7 +1,5 @@
 import React from 'react';
 
 export default function BlogPage() {
-  return (
-    <section>Blog!</section>
-  );
+  return <section>Blog!</section>;
 }
