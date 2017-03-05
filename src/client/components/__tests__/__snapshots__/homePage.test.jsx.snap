@@ -1,0 +1,14 @@
+exports[`<HomePage/> renders 1`] = `
+<SideEffect(DocumentTitle)
+  title="Home">
+  <section
+    className="main-content">
+    <h1>
+      Home...
+    </h1>
+    <p>
+      Figure something out what to place here...
+    </p>
+  </section>
+</SideEffect(DocumentTitle)>
+`;

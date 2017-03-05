@@ -19,10 +19,7 @@ const clientConfig = {
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
-        query: {
-          presets: ['es2015', 'react'],
-        },
+        use: 'babel-loader',
       },
     ],
   },
@@ -38,7 +35,7 @@ const clientConfig = {
 const serverConfig = {
   context: path.join(__dirname, '../src'),
   entry: {
-    server: ['babel-polyfill', './server/index.js'],
+    server: ['babel-polyfill', './server/server.js'],
   },
   plugins: [
     new webpack.BannerPlugin({
@@ -60,10 +57,7 @@ const serverConfig = {
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
-        query: {
-          presets: ['es2015', 'react'],
-        },
+        use: 'babel-loader',
       },
     ],
   },

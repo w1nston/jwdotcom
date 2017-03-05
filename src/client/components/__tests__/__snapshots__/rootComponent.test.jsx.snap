@@ -1,0 +1,38 @@
+exports[`<RootComponent/> renders 1`] = `
+<mockConstructor>
+  <div>
+    <nav
+      className="navigation-container">
+      <img
+        className="navigation-container__logo"
+        src="/assets/images/jwlogo.svg" />
+      <ul
+        className="navigation-container__items">
+        <li
+          className="navigation-container__item">
+          <Link
+            replace={false}
+            to="/">
+            Home
+          </Link>
+        </li>
+        <li
+          className="navigation-container__item">
+          <Link
+            replace={false}
+            to="/blog">
+            Blog
+          </Link>
+        </li>
+      </ul>
+    </nav>
+    <Route
+      component={[Function]}
+      exact={true}
+      path="/" />
+    <Route
+      component={[Function]}
+      path="/blog" />
+  </div>
+</mockConstructor>
+`;

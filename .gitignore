@@ -13,5 +13,4 @@ logs
 
 # Generated files
 public/assets/javascript/*
-public/assets/css/*
 dist
