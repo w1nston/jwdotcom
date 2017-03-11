@@ -16,7 +16,7 @@ exports[`<BlogPage/> renders 1`] = `
       </p>
       <pre>
         <code
-          className="bash">
+          className="language-bash">
           #!/usr/bin/env bash
           REPO=\"https://github.com/<username>/<repository name>.git\";
           BASE_DIR=\"/srv/www/example.com\";
@@ -74,7 +74,7 @@ exports[`<BlogPage/> renders 1`] = `
       </p>
       <pre>
         <code
-          className="bash">
+          className="language-bash">
           |-rootDirectory
           | |-app
           | | |-__tests__
@@ -216,7 +216,7 @@ exports[`<BlogPage/> renders 1`] = `
       </p>
       <pre>
         <code
-          className="js">
+          className="language-js">
           const path = require(\'path\');
           const webpack = require(\'webpack\');
           
@@ -305,7 +305,7 @@ exports[`<BlogPage/> renders 1`] = `
       </p>
       <pre>
         <code
-          className="yaml">
+          className="language-yaml">
           language: node_js
           node_js:
             - \"6\"
@@ -362,7 +362,7 @@ exports[`<BlogPage/> renders 1`] = `
       </p>
       <pre>
         <code
-          className="js">
+          className="language-js">
           new webpack.DefinePlugin({
             \'process.env\': {
               NODE_ENV: JSON.stringify(\'production\')
@@ -378,7 +378,7 @@ exports[`<BlogPage/> renders 1`] = `
       </p>
       <pre>
         <code
-          className="js">
+          className="language-js">
           const path = require(\'path\');
           const webpack = require(\'webpack\');
           
@@ -425,7 +425,7 @@ exports[`<BlogPage/> renders 1`] = `
       </h4>
       <pre>
         <code
-          className="bash">
+          className="language-bash">
           #!/usr/bin/env bash
           
           REPO=\"https://github.com/w1nston/jwdotcom.git\";
@@ -498,7 +498,7 @@ exports[`<BlogPage/> renders 1`] = `
       </p>
       <pre>
         <code
-          className="bash">
+          className="language-bash">
           #!/usr/bin/env bash
           
           ...
@@ -543,7 +543,7 @@ exports[`<BlogPage/> renders 1`] = `
       </p>
       <pre>
         <code
-          className="bash">
+          className="language-bash">
           |-rootDirectory
           | |-public
           | | |-assets
@@ -577,7 +577,7 @@ exports[`<BlogPage/> renders 1`] = `
       </p>
       <pre>
         <code
-          className="bash">
+          className="language-bash">
           /srv/www/example.com/<date>/
         </code>
       </pre>
@@ -592,7 +592,7 @@ exports[`<BlogPage/> renders 1`] = `
       </p>
       <pre>
         <code
-          className="bash">
+          className="language-bash">
           /srv/www/example.com/latest
         </code>
       </pre>
@@ -606,7 +606,7 @@ exports[`<BlogPage/> renders 1`] = `
       </p>
       <pre>
         <code
-          className="bash">
+          className="language-bash">
           20160810/
           20160917/
           latest -> 20160917/
@@ -650,7 +650,7 @@ exports[`<BlogPage/> renders 1`] = `
       </p>
       <pre>
         <code
-          className="bash">
+          className="language-bash">
           <year>.<month>.<day>.<version>.<patch version>
           
           // E.g.
@@ -679,7 +679,7 @@ exports[`<BlogPage/> renders 1`] = `
       </p>
       <pre>
         <code
-          className="bash">
+          className="language-bash">
           #!/usr/bin/env bash
           
           # 1) Fetch latest source code from Github, perhaps by listening on git hooks
@@ -710,7 +710,7 @@ exports[`<BlogPage/> renders 1`] = `
       </p>
       <pre>
         <code
-          className="bash">
+          className="language-bash">
           /srv/www/example.com/releases/2016.09.17.1.0
           /srv/www/example.com/releases/2016.09.18.1.0
           /srv/www/example.com/latest -> /srv/www/example.com/releases/2016.09.18.1.0

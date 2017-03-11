@@ -1,7 +1,8 @@
 import React from 'react';
-import { Link, Route } from 'react-router-dom';
+import { Link, Route, Switch } from 'react-router-dom';
 import HomePage from './homePage';
 import BlogPage from './blogPage';
+import NoMatch from './noMatch';
 
 export default function RootComponent({ Router, location, context }) {
   return (
@@ -13,12 +14,19 @@ export default function RootComponent({ Router, location, context }) {
             src="/assets/images/jwlogo.svg"
           />
           <ul className="navigation-container__items">
-            <li className="navigation-container__item"><Link to="/">Home</Link></li>
-            <li className="navigation-container__item"><Link to="/blog">Blog</Link></li>
+            <li className="navigation-container__item">
+              <Link to="/">Home</Link>
+            </li>
+            <li className="navigation-container__item">
+              <Link to="/blog">Blog</Link>
+            </li>
           </ul>
         </nav>
-        <Route exact path="/" component={HomePage} />
-        <Route path="/blog" component={BlogPage} />
+        <Switch>
+          <Route exact path="/" component={HomePage} />
+          <Route path="/blog" component={BlogPage} />
+          <Route component={NoMatch} />
+        </Switch>
       </div>
     </Router>
   );
